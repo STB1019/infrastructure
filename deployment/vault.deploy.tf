@@ -2,6 +2,12 @@ resource docker_container vault {
   name      = "vault"
   image     = docker_image.vault.image_id
 
+  depends_on = [
+    local_file.temp_http_cert,
+    local_sensitive_file.temp_http_key,
+    local_file.vault_data_dir
+  ]
+
   capabilities{
       add   = ["IPC_LOCK"]
   }
@@ -9,20 +15,8 @@ resource docker_container vault {
   restart   = "unless-stopped"
 
   volumes{
-    container_path  = "/etc/vault/config.hcl"
-    host_path       = local_file.vault_conf.filename
-    read_only       = true
-  }
-
-  volumes{
-    container_path  = "/etc/vault/server.fullchain.pem"
-    host_path       = local_file.temp_http_cert.filename
-    read_only       = true
-  }
-
-  volumes{
-    container_path  = "/etc/vault/server.key"
-    host_path       = local_sensitive_file.temp_http_key.filename
+    container_path  = "/etc/vault/"
+    host_path       = dirname(local_file.temp_http_cert.filename)
     read_only       = true
   }
 

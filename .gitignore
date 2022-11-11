@@ -8,5 +8,5 @@ data/
 *.pem
 *.crt
 *.key
-
+creds
 !deployment*/config

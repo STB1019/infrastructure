@@ -12,7 +12,7 @@ listener "tcp" {
   address     = "0.0.0.0:${external_https_port}"
   tls_disable = "false"
   tls_key_file = "/etc/vault/server.key"
-  tls_cert_file = "/etc/vault/server.fullchain.pem"
+  tls_cert_file = "/etc/vault/server.crt"
 }
 
 api_addr = "https://${vault_host}:${external_https_port}"
