@@ -1,0 +1,12 @@
+config/
+data/
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+*.tfvars
+*.pem
+*.crt
+*.key
+
+!deployment*/config
