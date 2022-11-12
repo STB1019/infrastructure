@@ -8,7 +8,8 @@ resource docker_container postgres {
     local_file.postgres_ca,
     local_file.postgres_conf,
     local_file.pg_hba_conf,
-    local_file.postgres_data_dir
+    local_file.postgres_data_dir,
+    local_file.postgres_passwd
   ]
 
   restart   = "unless-stopped"
@@ -20,7 +21,13 @@ resource docker_container postgres {
   }
 
   volumes{
-    container_path  = "/var/lib/postgresql/data/pgdata"
+    container_path  = "/etc/passwd"
+    host_path       = local_file.postgres_passwd.filename
+    read_only       = true
+  }
+
+  volumes{
+    container_path  = "/var/lib/postgresql/data"
     host_path       = dirname(local_file.postgres_data_dir.filename)
   }
 
@@ -33,25 +40,26 @@ resource docker_container postgres {
     protocol = "tcp"
   }
 
-  user    = "1000:1000"
+  user    = var.user
 
   env = [
     "POSTGRES_PASSWORD=${random_string.postgres_user_password.result}",
     "POSTGRES_USER=postgres",
-    "POSTGRES_DB=postgres"
+    "POSTGRES_DB=postgres",
+    "PGDATA=/var/lib/postgresql/data/pgdata"
   ]
-/*
+
   healthcheck{
-    test          = ["CMD", "wget", "http://127.0.0.1:${var.internal_http_port}/v1/sys/health", "-O", "-"]
+    test          = ["CMD", "pg_isready", "-U", "postgres"]
     interval      = "30s"
-    retries       = 10
+    retries       = 4
     start_period  = "10s"
     timeout       = "15s"
-  }*/
+  }
 }
-/*
-module wait_vault {
+
+module wait_pg {
     source          = "../module_docker_healthy"
-    container_name  = docker_container.vault.name
-    depends_on      = [docker_container.vault]
-}*/
+    container_name  = docker_container.postgres.name
+    depends_on      = [docker_container.postgres]
+}

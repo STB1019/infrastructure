@@ -14,8 +14,8 @@ resource "vault_pki_secret_backend_intermediate_cert_request" "pki" {
   format = "pem"
   private_key_format = "der"
 
-  key_type = "ec"
-  key_bits = "256"
+  key_type = var.keytype
+  key_bits = var.keybits
 }
 
 resource "vault_pki_secret_backend_root_sign_intermediate" "pki" {
@@ -47,11 +47,12 @@ resource "vault_pki_secret_backend_role" "server" {
 
   server_flag = true
   client_flag = false 
-  key_type = "ec"
-  key_bits = 256
+  key_type = var.keytype
+  key_bits = var.keybits
 
   ou = [var.pki_name]
   organization = [var.org]
+  
   country = ["IT"]
   locality = ["Brescia"]
   max_ttl = 63113904 
@@ -69,8 +70,8 @@ resource "vault_pki_secret_backend_role" "client" {
   allow_any_name = var.allow_any_name
   enforce_hostnames = var.enforce_hostnames
   allow_ip_sans = true
-  key_type = "ec"
-  key_bits = 256
+  key_type = var.keytype
+  key_bits = var.keybits
 
   server_flag = false
   client_flag = true 
@@ -79,6 +80,7 @@ resource "vault_pki_secret_backend_role" "client" {
   organization = [var.org]
   country = ["IT"]
   locality = ["Brescia"]
+
   max_ttl = 63113904 
   ttl = 2592000
 }

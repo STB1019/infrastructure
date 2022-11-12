@@ -3,6 +3,7 @@ resource vault_pki_secret_backend_cert postgres_server_crt {
   name = module.postgres_intermediate.server_role
 
   common_name = "postgres.${data.terraform_remote_state.dep.outputs.common_name_domain}"
+  ip_sans = ["127.0.0.1"]
 }
 
 resource local_sensitive_file postgres_key {
@@ -35,14 +36,23 @@ resource local_file pg_hba_conf{
   file_permission = 0640
 }
 
+resource local_file postgres_passwd{
+  content         = templatefile("${path.root}/config/postgres/passwd.tpl", {
+    user = var.user
+  })
+  filename        = "${var.config_folder}/pg/passwd"
+  file_permission = 0644
+}
+
+
 resource local_file postgres_data_dir{
   content         = ""
-  filename        = "${var.data_folder}/vault/.keep"
+  filename        = "${var.data_folder}/pg/.keep"
   file_permission = 0640
 }
 
 resource "random_string" "postgres_user_password" {
-  length           = 64
+  length           = 92
   special          = true
   override_special = "!@#$%^&*()_-+="
 }

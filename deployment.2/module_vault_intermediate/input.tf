@@ -22,3 +22,13 @@ variable enforce_hostnames {
 variable root_cert_pem {
   type        = string
 }
+
+variable keytype {
+  type        = string
+  default     = "ec"
+}
+
+variable keybits {
+  type        = number
+  default     = 256
+}
