@@ -15,6 +15,10 @@ terraform {
       source  = "cyrilgdn/postgresql"
       version = "1.17.1"
     }
+    authentik = {
+      source  = "goauthentik/authentik"
+      version = "2022.10.0"
+    }
   }
 }
 
@@ -23,7 +27,7 @@ provider "docker" {
 }
 
 provider vault {
-    address = "https://${data.terraform_remote_state.dep.outputs.vault_container_ip}:${data.terraform_remote_state.dep.outputs.vault_port}"
+    address = "https://127.0.0.1:${data.terraform_remote_state.dep.outputs.vault_port}"
     token = var.vault_token
     skip_tls_verify = true
 }

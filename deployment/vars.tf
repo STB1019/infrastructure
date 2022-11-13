@@ -20,3 +20,9 @@ variable org {
   default     = "ieeesb1019"
   description = "Desinenza dei common name"
 }
+
+
+variable user {
+  type        = string
+  default     = "1000:1000"
+}

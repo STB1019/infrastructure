@@ -13,6 +13,9 @@ variable cn {
 variable allowed_domains {
   type        = list(string)
 }
+variable allowed_uri_sans {
+  type        = list(string)
+}
 variable allow_any_name {
   type        = bool
 }

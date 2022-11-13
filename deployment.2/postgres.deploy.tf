@@ -42,6 +42,12 @@ resource docker_container postgres {
 
   user    = var.user
 
+  shm_size = 256
+
+  networks_advanced{
+    name = docker_network.nw.name
+  }
+
   env = [
     "POSTGRES_PASSWORD=${random_string.postgres_user_password.result}",
     "POSTGRES_USER=postgres",

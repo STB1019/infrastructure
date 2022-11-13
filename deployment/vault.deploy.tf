@@ -33,7 +33,7 @@ resource docker_container vault {
     protocol = "tcp"
   }
 
-  user    = "1000:1000"
+  user    = var.user
 
   env = [
     "VAULT_ADDR=http://127.0.0.1:${var.internal_http_port}",

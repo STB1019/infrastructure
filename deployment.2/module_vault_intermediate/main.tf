@@ -44,6 +44,7 @@ resource "vault_pki_secret_backend_role" "server" {
   allow_any_name = var.allow_any_name
   enforce_hostnames = var.enforce_hostnames
   allow_ip_sans = true
+  allowed_uri_sans = var.allowed_uri_sans
 
   server_flag = true
   client_flag = false 
@@ -70,11 +71,12 @@ resource "vault_pki_secret_backend_role" "client" {
   allow_any_name = var.allow_any_name
   enforce_hostnames = var.enforce_hostnames
   allow_ip_sans = true
-  key_type = var.keytype
-  key_bits = var.keybits
+  allowed_uri_sans = var.allowed_uri_sans
 
   server_flag = false
   client_flag = true 
+  key_type = var.keytype
+  key_bits = var.keybits
 
   ou = [var.pki_name]
   organization = [var.org]

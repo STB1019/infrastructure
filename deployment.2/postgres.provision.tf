@@ -57,6 +57,6 @@ resource "postgresql_database" "authentik" {
   name              = "authentik"
   owner             = postgresql_role.authentik.name
   template          = "template0"
-  connection_limit  = 2
+  connection_limit  = -1
   allow_connections = true
 }

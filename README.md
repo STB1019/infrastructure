@@ -18,4 +18,8 @@ Unseal the vault
  - cd ../deployment.2
  - terraform init
  - terraform apply -var config_folder=$PWD/../config -var data_folder=$PWD/../data
+ 
+# After
+
  - refresh vault https certificates by doing `docker kill --signal="SIGHUP" vault`
+ - get akadmin user password: `cat terraform.tfstate | jq -r '.resources[] | select( .name == "akadmin_password" ) | .instances[0].attributes.result'`
