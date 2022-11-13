@@ -23,25 +23,16 @@ resource authentik_certificate_key_pair web {
   ]
 }
 
-
-resource "authentik_tenant" "tenant" {
-  domain            = "${data.terraform_remote_state.dep.outputs.common_name_domain}"
-  default           = false
-  
-  branding_title    = "IEEE SB1019 AuthManager"
-  web_certificate   = authentik_certificate_key_pair.web.id
-
-  branding_favicon  = "/media/icon.png"
-  branding_logo     = "/media/aside_logo.png"
-}
-
 resource "authentik_tenant" "tenant_local_dev" {
-  domain            = "${data.terraform_remote_state.dep.outputs.common_name_domain}:8443"
-  default           = false
+  domain              = "${data.terraform_remote_state.dep.outputs.common_name_domain}:8443"
+  default             = false
   
-  branding_title    = "IEEE SB1019 AuthManager"
-  web_certificate   = authentik_certificate_key_pair.web.id
+  branding_title      = "IEEE SB1019 AuthManager"
+  web_certificate     = authentik_certificate_key_pair.web.id
 
-  branding_favicon  = "/media/icon.png"
-  branding_logo     = "/media/aside_logo.png"
+  branding_favicon    = "/media/icon.png"
+  branding_logo       = "/media/aside_logo.png"
+
+  flow_authentication = authentik_flow.authentication-flow.uuid
 }
+
