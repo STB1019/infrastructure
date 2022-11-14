@@ -15,6 +15,7 @@ Unseal the vault
 
 # Deployment 2
 
+ - ensure assets directory belongs to user 1000:1000 or that 1000:1000 has read and execute permissions
  - cd ../deployment.2
  - terraform init
  - terraform apply -var config_folder=$PWD/../config -var data_folder=$PWD/../data
