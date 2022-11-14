@@ -8,7 +8,6 @@ variable data_folder {
   description = "container data folder"
 }
 
-
 variable common_name_domain {
   type        = string
   default     = "ieee.elux.ing.unibs.it"

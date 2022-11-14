@@ -34,5 +34,7 @@ resource "authentik_tenant" "tenant_local_dev" {
   branding_logo       = "/media/aside_logo.png"
 
   flow_authentication = authentik_flow.authentication-flow.uuid
+  flow_user_settings = authentik_flow.user-settings-flow.uuid
+  flow_invalidation = authentik_flow.logout-flow.uuid
 }
 

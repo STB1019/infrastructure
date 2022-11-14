@@ -15,10 +15,25 @@ Unseal the vault
 
 # Deployment 2
 
- - ensure assets directory belongs to user 1000:1000 or that 1000:1000 has read and execute permissions
+get github application auth capabilities by going into `your gh profile > settings > developer settings > oauth apps > create oauth app`
+ - copy client secret
+ - copy client id
+insert as callback url the following: `https://<authentik host>:8443/source/oauth/callback/github/`
+
+ - ensure assets directory belongs to user 1000:1000 or that 1000:1000 has read and execution permissions
  - cd ../deployment.2
+ - 
+ ```
+cat << EOF > vars.tfvars
+config_folder="$PWD/../config" 
+data_folder="$PWD/../data"
+vault_token="_token_"
+gh_client_id="_clientid_"
+gh_secret="_secret_"
+EOF
+```
  - terraform init
- - terraform apply -var config_folder=$PWD/../config -var data_folder=$PWD/../data
+ - terraform apply -var-file=vars.tfvars
  
 # After
 

@@ -5,11 +5,15 @@ resource "authentik_flow" "authentication-flow" {
   designation = "authentication"
   layout      = "sidebar_left"
   background  = "/bg.jpg"
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
 }
 
 resource "authentik_flow_stage_binding" "authentication-flow-ident" {
   target = authentik_flow.authentication-flow.uuid
-  stage  = data.authentik_stage.default-authentication-identification.id
+  stage  = authentik_stage_identification.identification-stage.id
   order  = 10
 }
 
