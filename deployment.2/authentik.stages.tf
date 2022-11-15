@@ -116,3 +116,18 @@ resource "authentik_stage_prompt" "password-set-stage" {
     module.wait_authentik_worker
   ]
 }
+
+resource "authentik_stage_prompt" "committee-choose-stage" {
+  name = "committee-choose-stage"
+  fields = [
+    authentik_stage_prompt_field.committee-field.id,
+    authentik_stage_prompt_field.committee-helper.id
+  ]
+  validation_policies = [
+    authentik_policy_expression.policy-validate-committee.id,
+  ]
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}

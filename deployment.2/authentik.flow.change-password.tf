@@ -3,7 +3,7 @@ resource "authentik_flow" "password-change-flow" {
   title       = "Cambio Password"
   slug        = "stb1019-password-change-flow"
   designation = "stage_configuration"
-  layout      = "sidebar_left"
+  layout      = "stacked"
   background  = "/bg.jpg"
 
   depends_on = [

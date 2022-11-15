@@ -43,7 +43,7 @@ resource "authentik_policy_expression" "policy-validate-name" {
 }
 
 resource "authentik_policy_expression" "policy-validate-surname" {
-  name       = "policy-valid-name"
+  name       = "policy-valid-surname"
   expression = templatefile("./policies/store-attribute.py.tpl", {
     attribute = "cognome"
   })
@@ -80,6 +80,35 @@ resource "authentik_policy_expression" "policy-is-gh-org-stb1019" {
   ]
 }
 
+resource "authentik_policy_expression" "policy-is-committee-assigned" {
+  name       = "policy-is-committee-assigned"
+  expression = file("./policies/is-committee-assigned.py")
+
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_policy_expression" "policy-validate-committee" {
+  name       = "policy-validate-committee"
+  expression = file("./policies/committee-validation.py")
+
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_policy_expression" "policy-set-committee" {
+  name       = "policy-set-committee"
+  expression = file("./policies/committee-set.py")
+
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
 
 resource "authentik_policy_password" "policy-password-strength" {
   name          = "policy-password-strength"

@@ -75,3 +75,29 @@ resource "authentik_stage_prompt_field" "field-password-repeat" {
     module.wait_authentik_worker
   ]
 }
+
+resource "authentik_stage_prompt_field" "committee-helper" {
+  field_key = "_committee_helper"
+  label     = "committee_helper"
+  type      = "static"
+  order     = 10
+  placeholder = "Selezionare uno tra i seguenti committee:<bl><li>financial: soldi</li><li>membeship: gestione membri</li><li>publicity: social e eventi</li></bl>"
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_stage_prompt_field" "committee-field" {
+  field_key = "committee"
+  label     = "Scelta Committee"
+  type      = "text"
+  order     = 20
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+
+
