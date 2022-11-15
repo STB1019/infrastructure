@@ -17,13 +17,6 @@ resource "authentik_flow_stage_binding" "sso-authentication-flow-login" {
   order  = 0
 }
 
-resource "authentik_policy_binding" "sso-authentication-gh-org" {
-  target = authentik_flow_stage_binding.sso-authentication-flow-login.id
-  policy = authentik_policy_expression.policy-is-gh-org-stb1019.id
-  order  = 0
-}
-
-
 resource "authentik_policy_binding" "sso-authentication-flow-access" {
   target = authentik_flow.sso-authentication-flow.uuid
   policy = authentik_policy_expression.policy-source-is-sso.id

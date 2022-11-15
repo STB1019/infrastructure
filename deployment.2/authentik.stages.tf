@@ -4,13 +4,12 @@ resource "authentik_stage_identification" "identification-stage" {
   sources        = [authentik_source_oauth.github-source.uuid]
 }
 
-data "authentik_stage" "default-authentication-password" {
-  name = "default-authentication-password"
 
-  depends_on = [
-    module.wait_authentik,
-    module.wait_authentik_worker
-  ]
+resource "authentik_stage_password" "password-stage" {
+  name            = "password-stage"
+  backends        = ["authentik.core.auth.InbuiltBackend", /*"authentik.core.auth.TokenBackend",*/ "authentik.sources.ldap.auth.LDAPBackend"]
+  configure_flow  = authentik_flow.password-change-flow.uuid
+  failed_attempts_before_cancel = 3
 }
 
 data "authentik_stage" "default-authentication-mfa-validation" {
@@ -76,7 +75,6 @@ data "authentik_stage" "default-source-authentication-login" {
   ]
 }
 
-
 resource "authentik_stage_prompt" "user-info-stage" {
   name = "user-info-stage"
   fields = [
@@ -87,6 +85,8 @@ resource "authentik_stage_prompt" "user-info-stage" {
     authentik_stage_prompt_field.field-ieee-id.id,
   ]
   validation_policies = [
+    authentik_policy_expression.policy-validate-name.id,
+    authentik_policy_expression.policy-validate-surname.id,
     authentik_policy_expression.policy-validate-ieee-id.id,
     authentik_policy_expression.policy-validate-unibs-email.id,
     authentik_policy_expression.policy-validate-ieee-email.id

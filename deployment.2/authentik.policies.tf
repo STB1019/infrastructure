@@ -31,6 +31,28 @@ resource "authentik_policy_expression" "policy-validate-ieee-email" {
   ]
 }
 
+resource "authentik_policy_expression" "policy-validate-name" {
+  name       = "policy-valid-name"
+  expression = templatefile("./policies/store-attribute.py.tpl", {
+    attribute = "nome"
+  })
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_policy_expression" "policy-validate-surname" {
+  name       = "policy-valid-name"
+  expression = templatefile("./policies/store-attribute.py.tpl", {
+    attribute = "cognome"
+  })
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
 resource "authentik_policy_expression" "policy-source-if-username" {
   name       = "policy-source-if-username"
   expression = "return 'username' not in context.get('prompt_data', {})"
@@ -58,6 +80,7 @@ resource "authentik_policy_expression" "policy-is-gh-org-stb1019" {
   ]
 }
 
+
 resource "authentik_policy_password" "policy-password-strength" {
   name          = "policy-password-strength"
   length_min    = 8
@@ -66,4 +89,8 @@ resource "authentik_policy_password" "policy-password-strength" {
   amount_uppercase = 1
   amount_lowercase = 1
   error_message = "La password deve contenere almeno 8 caratteri contenente lettere minuscole, maiuscole, numeri e simboli"
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
 }

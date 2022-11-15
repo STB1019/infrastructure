@@ -19,7 +19,7 @@ resource "authentik_flow_stage_binding" "authentication-flow-ident" {
 
 resource "authentik_flow_stage_binding" "authentication-flow-psw" {
   target = authentik_flow.authentication-flow.uuid
-  stage  = data.authentik_stage.default-authentication-password.id
+  stage  = authentik_stage_password.password-stage.id
   order  = 20
 }
 

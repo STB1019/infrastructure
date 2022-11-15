@@ -12,21 +12,15 @@ resource "authentik_flow" "password-change-flow" {
   ]
 }
 
-resource "authentik_flow_stage_binding" "password-change-flow-psw" {
-  target = authentik_flow.password-change-flow.uuid
-  stage  = data.authentik_stage.default-authentication-password.id
-  order  = 20
-}
-
-
 resource "authentik_flow_stage_binding" "password-change-flow-password" {
   target = authentik_flow.password-change-flow.uuid
   stage  = authentik_stage_prompt.password-set-stage.id
+  re_evaluate_policies = true
   order  = 30
 }
 
 resource "authentik_flow_stage_binding" "password-change-flow-write" {
   target = authentik_flow.password-change-flow.uuid
   stage  = data.authentik_stage.default-source-enrollment-write.id
-  order  = 30
+  order  = 40
 }
