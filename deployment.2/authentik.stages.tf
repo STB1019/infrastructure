@@ -103,7 +103,7 @@ resource "authentik_stage_prompt" "user-info-stage" {
     authentik_policy_expression.policy-validate-surname.id,
     authentik_policy_expression.policy-validate-ieee-id.id,
     authentik_policy_expression.policy-validate-unibs-email.id,
-    authentik_policy_expression.policy-validate-ieee-email.id
+    authentik_policy_expression.policy-validate-ieee-email.id,
   ]
 }
 
@@ -124,6 +124,7 @@ resource "authentik_stage_prompt" "password-set-stage" {
   ]
   validation_policies = [
     authentik_policy_password.policy-password-strength.id,
+    authentik_policy_expression.policy-set-password-status.id
   ]
   depends_on = [
     module.wait_authentik,

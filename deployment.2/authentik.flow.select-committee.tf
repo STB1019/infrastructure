@@ -14,7 +14,8 @@ resource "authentik_flow" "committee-select-flow" {
 
 resource "authentik_policy_binding" "committee-select-flow-access" {
   target = authentik_flow.committee-select-flow.uuid
-  policy = authentik_policy_expression.policy-is-committee-assigned.id
+  group = authentik_group.member.id
+  negate = true
   order  = 0
 }
 
@@ -28,7 +29,8 @@ resource "authentik_flow_stage_binding" "committee-select-flow-choose" {
 
 resource "authentik_policy_binding" "committee-select-flow-choose-access" {
   target = authentik_flow_stage_binding.committee-select-flow-choose.id
-  policy = authentik_policy_expression.policy-is-committee-assigned.id
+  group = authentik_group.member.id
+  negate = true
   order  = 0
 }
 
@@ -52,12 +54,11 @@ resource "authentik_flow_stage_binding" "committee-select-flow-error" {
   stage  = authentik_stage_prompt.committee-error-stage.id
   evaluate_on_plan = false
   re_evaluate_policies = true
-  order  = 50
+  order  = 35
 }
 
 resource "authentik_policy_binding" "committee-select-flow-error-access" {
   target = authentik_flow_stage_binding.committee-select-flow-error.id
-  policy = authentik_policy_expression.policy-is-committee-assigned.id
-  negate = true
+  group = authentik_group.member.id
   order  = 0
 }

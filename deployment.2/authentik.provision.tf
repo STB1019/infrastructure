@@ -8,9 +8,9 @@ resource vault_pki_secret_backend_cert authentik_web_crt {
   backend = module.http_intermediate.path
   name = module.http_intermediate.server_role
 
-  common_name = "sso.${data.terraform_remote_state.dep.outputs.common_name_domain}"
+  common_name = data.terraform_remote_state.dep.outputs.common_name_domain
   ip_sans = ["127.0.0.1"]
-  uri_sans = [data.terraform_remote_state.dep.outputs.common_name_domain]
+  uri_sans = [data.terraform_remote_state.dep.outputs.common_name_domain, "sso.${data.terraform_remote_state.dep.outputs.common_name_domain}"]
 }
 
 resource authentik_certificate_key_pair web {

@@ -80,16 +80,6 @@ resource "authentik_policy_expression" "policy-is-gh-org-stb1019" {
   ]
 }
 
-resource "authentik_policy_expression" "policy-is-committee-assigned" {
-  name       = "policy-is-committee-assigned"
-  expression = file("./policies/is-committee-assigned.py")
-
-  depends_on = [
-    module.wait_authentik,
-    module.wait_authentik_worker
-  ]
-}
-
 resource "authentik_policy_expression" "policy-validate-committee" {
   name       = "policy-validate-committee"
   expression = file("./policies/committee-validation.py")
@@ -103,6 +93,26 @@ resource "authentik_policy_expression" "policy-validate-committee" {
 resource "authentik_policy_expression" "policy-set-committee" {
   name       = "policy-set-committee"
   expression = file("./policies/committee-set.py")
+
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_policy_expression" "policy-set-password-status" {
+  name       = "policy-set-password-status"
+  expression = file("./policies/set-password-status.py")
+
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_policy_expression" "policy-has-password" {
+  name       = "policy-set-password-status"
+  expression = "return request.user.attributes.get('has_password', False)"
 
   depends_on = [
     module.wait_authentik,

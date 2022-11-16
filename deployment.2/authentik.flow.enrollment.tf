@@ -36,14 +36,14 @@ resource "authentik_flow_stage_binding" "enrollment-flow-userinfo" {
   target = authentik_flow.enrollment-flow.uuid
   stage  = authentik_stage_prompt.user-info-stage.id
   re_evaluate_policies = true
-  order  = 20
+  order  = 30
 }
 
 resource "authentik_flow_stage_binding" "enrollment-flow-password" {
   target = authentik_flow.enrollment-flow.uuid
   stage  = authentik_stage_prompt.password-set-stage.id
   re_evaluate_policies = true
-  order  = 30
+  order  = 20
 }
 
 resource "authentik_flow_stage_binding" "enrollment-flow-write" {
