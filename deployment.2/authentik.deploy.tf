@@ -5,7 +5,8 @@ resource docker_container authentik {
   depends_on = [
     local_sensitive_file.authentik_postgres_key,
     local_file.authentik_postgres_cert,
-    local_file.authentik_postgres_ca
+    local_file.authentik_postgres_ca,
+    module.wait_redis
   ]
 
   restart   = "unless-stopped"
@@ -42,6 +43,7 @@ resource docker_container authentik {
     "AUTHENTIK_POSTGRESQL__HOST=${docker_container.postgres.name}",
     "AUTHENTIK_POSTGRESQL__USER=${postgresql_role.authentik.name}",
     "AUTHENTIK_POSTGRESQL__NAME=${postgresql_database.authentik.name}",
+    "AUTHENTIK_REDIS__PASSWORD=${random_string.redis_password.result}",
 
     "AUTHENTIK_SECRET_KEY=${random_string.authentik_secret_key.result}",
     "AUTHENTIK_ERROR_REPORTING=false",
@@ -65,7 +67,8 @@ resource docker_container authentik_worker {
   depends_on = [
     local_sensitive_file.authentik_postgres_key,
     local_file.authentik_postgres_cert,
-    local_file.authentik_postgres_ca
+    local_file.authentik_postgres_ca,
+    module.wait_redis
   ]
 
   restart   = "unless-stopped"
@@ -106,6 +109,7 @@ resource docker_container authentik_worker {
     "AUTHENTIK_POSTGRESQL__HOST=${docker_container.postgres.name}",
     "AUTHENTIK_POSTGRESQL__USER=${postgresql_role.authentik.name}",
     "AUTHENTIK_POSTGRESQL__NAME=${postgresql_database.authentik.name}",
+    "AUTHENTIK_REDIS__PASSWORD=${random_string.redis_password.result}",
 
     "AUTHENTIK_SECRET_KEY=${random_string.authentik_secret_key.result}",
     "AUTHENTIK_ERROR_REPORTING=false",

@@ -41,3 +41,22 @@ resource "vault_ssh_secret_backend_role" "ssh_host" {
     allowed_domains="localdomain,ieee.elux.ing.unibs.it"
     allow_subdomains=true
 }
+
+resource "vault_policy" "ssh_policy" {
+  name = "ssh"
+
+  policy = <<EOT
+path "auth/token/lookup-self" {
+    capabilities = ["read"]
+}
+path "auth/token/renew-self" {
+    capabilities = ["update"]
+}
+path "auth/token/revoke-self" {
+    capabilities = ["update"]
+}
+path "ssh/issue/${vault_ssh_secret_backend_role.ssh_client.name}" {
+    capabilities = ["update", "create"]
+}
+EOT
+}

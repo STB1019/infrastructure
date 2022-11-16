@@ -1,10 +1,20 @@
+resource random_string redis_password{
+  length           = 92
+  special          = true
+  override_special = "!@#$%^&*()_-+="
+}
+
 resource docker_container redis {
   name      = "redis"
   image     = docker_image.redis.image_id
 
   restart   = "unless-stopped"
 
-  command = ["--save", "60", "1", "--loglevel", "warning"]
+  command = [
+    "--save", "60", "1", 
+    "--loglevel", "warning", 
+    "--requirepass", random_string.redis_password.result
+  ]
   
   ports{
     internal = 6379
@@ -20,7 +30,7 @@ resource docker_container redis {
   }
 
   healthcheck{
-    test          = ["CMD-SHELL", "redis-cli ping | grep PONG"]
+    test          = ["CMD-SHELL", "redis-cli -a '${random_string.redis_password.result}' ping | grep PONG"]
     interval      = "30s"
     retries       = 4
     start_period  = "10s"
