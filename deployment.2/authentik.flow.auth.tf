@@ -20,12 +20,20 @@ resource "authentik_flow_stage_binding" "authentication-flow-ident" {
 resource "authentik_flow_stage_binding" "authentication-flow-psw" {
   target = authentik_flow.authentication-flow.uuid
   stage  = authentik_stage_password.password-stage.id
+  evaluate_on_plan = false
+  re_evaluate_policies = true
   order  = 20
+}
+
+resource "authentik_policy_binding" "authentication-flow-mfa-nopasswd-policy" {
+  target = authentik_flow_stage_binding.authentication-flow-psw.id
+  policy = authentik_policy_expression.policy-mfa-no-password.id
+  order  = 0
 }
 
 resource "authentik_flow_stage_binding" "authentication-flow-mfa" {
   target = authentik_flow.authentication-flow.uuid
-  stage  = data.authentik_stage.default-authentication-mfa-validation.id
+  stage  = authentik_stage_authenticator_validate.auth-mfa-stage.id
   order  = 30
 }
 

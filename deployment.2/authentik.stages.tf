@@ -2,6 +2,7 @@ resource "authentik_stage_identification" "identification-stage" {
   name           = "stb1019-ident-stage"
   user_fields    = ["username", "email"]
   sources        = [authentik_source_oauth.github-source.uuid]
+  passwordless_flow = authentik_flow.authentication-passwordless-flow.uuid
 }
 
 
@@ -12,8 +13,21 @@ resource "authentik_stage_password" "password-stage" {
   failed_attempts_before_cancel = 3
 }
 
-data "authentik_stage" "default-authentication-mfa-validation" {
-  name = "default-authentication-mfa-validation"
+resource "authentik_stage_authenticator_validate" "auth-mfa-stage" {
+  name                  = "authenticator-validate-stage"
+  device_classes        = ["static", "totp", "webauthn", "duo", "sms"]
+  not_configured_action = "skip"
+
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_stage_authenticator_validate" "auth-mfa-pwless-stage" {
+  name                  = "authenticator-pwless-validate-stage"
+  device_classes        = ["webauthn"]
+  not_configured_action = "deny"
 
   depends_on = [
     module.wait_authentik,
@@ -129,5 +143,12 @@ resource "authentik_stage_prompt" "committee-choose-stage" {
   depends_on = [
     module.wait_authentik,
     module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_stage_prompt" "committee-error-stage" {
+  name = "committee-error-stage"
+  fields = [
+    authentik_stage_prompt_field.committee-error-helper.id
   ]
 }

@@ -88,6 +88,18 @@ resource "authentik_stage_prompt_field" "committee-helper" {
   ]
 }
 
+resource "authentik_stage_prompt_field" "committee-error-helper" {
+  field_key = "_committee_error_helper"
+  label     = "committee_error_helper"
+  type      = "static"
+  order     = 0
+  placeholder = "Hai già scelto un comitato. Questa pagina è ora visibile per motivi di cache. (tra 5 minuti sparirà)"
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
 resource "authentik_stage_prompt_field" "committee-field" {
   field_key = "committee"
   label     = "Scelta Committee"

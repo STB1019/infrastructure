@@ -21,8 +21,15 @@ resource "authentik_policy_binding" "committee-select-flow-access" {
 resource "authentik_flow_stage_binding" "committee-select-flow-choose" {
   target = authentik_flow.committee-select-flow.uuid
   stage  = authentik_stage_prompt.committee-choose-stage.id
-  re_evaluate_policies = true
   order  = 10
+  evaluate_on_plan = false
+  re_evaluate_policies = true
+}
+
+resource "authentik_policy_binding" "committee-select-flow-choose-access" {
+  target = authentik_flow_stage_binding.committee-select-flow-choose.id
+  policy = authentik_policy_expression.policy-is-committee-assigned.id
+  order  = 0
 }
 
 resource "authentik_flow_stage_binding" "committee-select-flow-write" {
@@ -36,5 +43,21 @@ resource "authentik_flow_stage_binding" "committee-select-flow-write" {
 resource "authentik_policy_binding" "committee-select-flow-write-setup" {
   target = authentik_flow_stage_binding.committee-select-flow-write.id
   policy = authentik_policy_expression.policy-set-committee.id
+  order  = 0
+}
+
+
+resource "authentik_flow_stage_binding" "committee-select-flow-error" {
+  target = authentik_flow.committee-select-flow.uuid
+  stage  = authentik_stage_prompt.committee-error-stage.id
+  evaluate_on_plan = false
+  re_evaluate_policies = true
+  order  = 50
+}
+
+resource "authentik_policy_binding" "committee-select-flow-error-access" {
+  target = authentik_flow_stage_binding.committee-select-flow-error.id
+  policy = authentik_policy_expression.policy-is-committee-assigned.id
+  negate = true
   order  = 0
 }

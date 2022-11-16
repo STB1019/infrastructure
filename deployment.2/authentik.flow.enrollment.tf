@@ -15,13 +15,13 @@ resource "authentik_flow" "enrollment-flow" {
 resource "authentik_flow_stage_binding" "enrollment-flow-invitation" {
   target = authentik_flow.enrollment-flow.uuid
   stage  = authentik_stage_invitation.invitation-stage.id
-  re_evaluate_policies = true
   order  = 1
 }
 
 resource "authentik_flow_stage_binding" "enrollment-flow-username" {
   target = authentik_flow.enrollment-flow.uuid
   stage  = data.authentik_stage.default-source-enrollment-prompt.id
+  evaluate_on_plan = true
   re_evaluate_policies = true
   order  = 10
 }

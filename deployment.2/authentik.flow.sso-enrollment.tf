@@ -22,6 +22,7 @@ resource "authentik_policy_binding" "sso-enrollment-flow-access" {
 resource "authentik_flow_stage_binding" "sso-enrollment-flow-username" {
   target = authentik_flow.sso-enrollment-flow.uuid
   stage  = data.authentik_stage.default-source-enrollment-prompt.id
+  evaluate_on_plan = false
   re_evaluate_policies = true
   order  = 10
 }
@@ -35,7 +36,6 @@ resource "authentik_policy_binding" "source-sso-enrollment-if-username-policy" {
 resource "authentik_flow_stage_binding" "sso-enrollment-flow-userinfo" {
   target = authentik_flow.sso-enrollment-flow.uuid
   stage  = authentik_stage_prompt.user-info-stage.id
-  re_evaluate_policies = true
   order  = 20
 }
 

@@ -123,3 +123,13 @@ resource "authentik_policy_password" "policy-password-strength" {
     module.wait_authentik_worker
   ]
 }
+
+resource "authentik_policy_expression" "policy-mfa-no-password" {
+  name       = "policy-mfa-no-password"
+  expression = file("./policies/mfa-no-password.py")
+
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
