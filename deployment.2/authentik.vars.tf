@@ -5,3 +5,8 @@ variable "gh_client_id"{
 variable "gh_secret"{
     type = string
 }
+
+variable "authentik_subdomain"{
+    type = string
+    default = ""
+}

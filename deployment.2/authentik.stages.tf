@@ -95,6 +95,7 @@ resource "authentik_stage_prompt" "user-info-stage" {
     authentik_stage_prompt_field.field-name.id,
     authentik_stage_prompt_field.field-surname.id,
     authentik_stage_prompt_field.field-unibs-email.id,
+    authentik_stage_prompt_field.field-unibs-id.id,
     authentik_stage_prompt_field.field-ieee-email.id,
     authentik_stage_prompt_field.field-ieee-id.id,
   ]
@@ -102,6 +103,7 @@ resource "authentik_stage_prompt" "user-info-stage" {
     authentik_policy_expression.policy-validate-name.id,
     authentik_policy_expression.policy-validate-surname.id,
     authentik_policy_expression.policy-validate-ieee-id.id,
+    authentik_policy_expression.policy-validate-unibs-id.id,
     authentik_policy_expression.policy-validate-unibs-email.id,
     authentik_policy_expression.policy-validate-ieee-email.id,
   ]

@@ -4,6 +4,7 @@ resource vault_pki_secret_backend_cert authentik_postgres_crt {
 
   common_name = "authentik"
   ip_sans = ["127.0.0.1"]
+  auto_renew = true
 }
 
 resource local_sensitive_file authentik_postgres_key {

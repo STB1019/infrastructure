@@ -4,6 +4,7 @@ resource vault_pki_secret_backend_cert postgres_provision_crt {
 
   common_name = "postgres"
   ip_sans = ["127.0.0.1"]
+  auto_renew = true
 }
 
 resource local_sensitive_file postgres_provision_key {

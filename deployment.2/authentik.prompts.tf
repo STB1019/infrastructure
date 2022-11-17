@@ -36,7 +36,7 @@ resource "authentik_stage_prompt_field" "field-ieee-email" {
   field_key = "ieee-email"
   label     = "Email @ieee.org"
   type      = "text"
-  order     = 40
+  order     = 50
   depends_on = [
     module.wait_authentik,
     module.wait_authentik_worker
@@ -47,7 +47,18 @@ resource "authentik_stage_prompt_field" "field-ieee-id" {
   field_key = "ieee-id"
   label     = "Matricola IEEE"
   type      = "text"
-  order     = 50
+  order     = 60
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_stage_prompt_field" "field-unibs-id" {
+  field_key = "unibs-id"
+  label     = "Matricola UNIBS"
+  type      = "text"
+  order     = 40
   depends_on = [
     module.wait_authentik,
     module.wait_authentik_worker
@@ -81,7 +92,7 @@ resource "authentik_stage_prompt_field" "committee-helper" {
   label     = "committee_helper"
   type      = "static"
   order     = 10
-  placeholder = "Selezionare uno tra i seguenti committee:<bl><li>financial: soldi</li><li>membeship: gestione membri</li><li>publicity: social e eventi</li></bl>"
+  placeholder = "Selezionare uno tra i seguenti committee:<bl><li>financial: soldi</li><li>membership: gestione membri</li><li>publicity: social e eventi</li></bl>"
   depends_on = [
     module.wait_authentik,
     module.wait_authentik_worker

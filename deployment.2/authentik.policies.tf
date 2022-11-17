@@ -7,6 +7,15 @@ resource "authentik_policy_expression" "policy-validate-ieee-id" {
   ]
 }
 
+resource "authentik_policy_expression" "policy-validate-unibs-id" {
+  name       = "policy-valid-unibs-id"
+  expression = file("./policies/validate-unibs-id.py")
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
 resource "authentik_policy_expression" "policy-validate-unibs-email" {
   name       = "policy-valid-unibs-email"
   expression = templatefile("./policies/validate-email.py.tpl", {

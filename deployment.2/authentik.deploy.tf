@@ -52,6 +52,13 @@ resource docker_container authentik {
     "AUTHENTIK_BOOTSTRAP_PASSWORD=${random_string.akadmin_password.result}",
     "AUTHENTIK_BOOTSTRAP_TOKEN=${random_string.authentik_token.result}",
   ]
+
+  log_driver = "json-file"
+  log_opts = {
+    "compress" = "true"
+    "max-file" = "4"
+    "max-size" = "256m"
+   }
 }
 
 module wait_authentik {
@@ -118,6 +125,13 @@ resource docker_container authentik_worker {
     "AUTHENTIK_BOOTSTRAP_PASSWORD=${random_string.akadmin_password.result}",
     "AUTHENTIK_BOOTSTRAP_TOKEN=${random_string.authentik_token.result}",
   ]
+
+  log_driver = "json-file"
+  log_opts = {
+    "compress" = "true"
+    "max-file" = "4"
+    "max-size" = "256m"
+   }
 }
 
 module wait_authentik_worker {

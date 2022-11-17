@@ -62,6 +62,13 @@ resource docker_container postgres {
     start_period  = "10s"
     timeout       = "15s"
   }
+
+  log_driver = "json-file"
+  log_opts = {
+    "compress" = "true"
+    "max-file" = "4"
+    "max-size" = "256m"
+   }
 }
 
 module wait_pg {

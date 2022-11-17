@@ -37,7 +37,7 @@ resource "authentik_scope_mapping" "ssh" {
   expression = templatefile("./scopes/ssh.py.tpl", {
     ssh_token = vault_token.authentik_ssh_token.client_token,
     ssh_client_ep = vault_ssh_secret_backend_role.ssh_client.name,
-    vault_ip = "vault"
+    vault_ip = "${data.terraform_remote_state.dep.outputs.common_name_domain}:8233"
   })
 
   depends_on = [

@@ -17,9 +17,8 @@ variable common_name_domain {
 variable org {
   type        = string
   default     = "ieeesb1019"
-  description = "Desinenza dei common name"
+  description = "Nome dell'organizzazione"
 }
-
 
 variable user {
   type        = string
