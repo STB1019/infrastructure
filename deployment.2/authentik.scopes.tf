@@ -1,3 +1,11 @@
+data "authentik_scope_mapping" "openid" {
+  scope_name = "openid"
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
 resource "authentik_scope_mapping" "ieee" {
   name       = "ieee"
   scope_name = "ieee"
@@ -18,6 +26,29 @@ resource "authentik_scope_mapping" "unibs" {
     module.wait_authentik_worker
   ]
 }
+
+resource "authentik_scope_mapping" "kube" {
+  name       = "kube"
+  scope_name = "kube"
+  expression = file("./scopes/kube.py")
+
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_scope_mapping" "userid" {
+  name       = "userid"
+  scope_name = "userid"
+  expression = file("./scopes/userid.py")
+
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
 
 resource "vault_token" "authentik_ssh_token" {
   policies = [vault_policy.ssh_policy.name]
