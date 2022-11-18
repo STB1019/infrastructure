@@ -29,3 +29,20 @@ module postgres_intermediate {
 
     keybits             = 521
 }
+
+
+
+module oidc_intermediate {
+    source = "./module_vault_intermediate"
+
+    pki_name            = "oidc"
+    org                 = data.terraform_remote_state.dep.outputs.org
+    root_path           = vault_mount.root.path
+    cn                  = "${data.terraform_remote_state.dep.outputs.org} postgres intermediate ca"
+    allowed_domains     = []
+    allowed_uri_sans    = ["*"]
+    allow_any_name      = true
+    enforce_hostnames   = false
+    root_cert_pem       = tls_self_signed_cert.root_ca.cert_pem
+    keybits             = 521
+}

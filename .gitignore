@@ -10,3 +10,4 @@ data/
 *.key
 creds
 !deployment*/config
+k3s

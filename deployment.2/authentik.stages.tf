@@ -153,3 +153,9 @@ resource "authentik_stage_prompt" "committee-error-stage" {
     authentik_stage_prompt_field.committee-error-helper.id
   ]
 }
+
+
+resource "authentik_stage_consent" "explicit-consent-stage" {
+  name = "explicit-consent-stage"
+  consent_expire_in = "days=3"
+}

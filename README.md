@@ -39,3 +39,8 @@ EOF
 
  - refresh vault https certificates by doing `docker kill --signal="SIGHUP" vault`
  - get akadmin user password: `cat terraform.tfstate | jq -r '.resources[] | select( .name == "akadmin_password" ) | .instances[0].attributes.result'`
+
+
+
+# Deployment 3
+
