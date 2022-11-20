@@ -9,8 +9,8 @@ if re.search('${email_domain_regex}', context['prompt_data']['${field_name}']) i
     ak_message("Invalid email. it must match with ${email_domain_regex}")
     return False
 
-if 'attributes' not in context['prompt_data']:
-    context['prompt_data']['attributes'] = {}
-
-context['prompt_data']['attributes']['${field_name}'] = context['prompt_data']['${field_name}']
+#if 'attributes' not in context['prompt_data']:
+#    context['prompt_data']['attributes'] = {}
+#
+#context['prompt_data']['attributes']['${field_name}'] = context['prompt_data']['${field_name}']
 return True

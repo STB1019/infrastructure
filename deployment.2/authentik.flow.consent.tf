@@ -5,6 +5,7 @@ resource "authentik_flow" "consent-flow" {
   designation = "authorization"
   layout      = "stacked"
   background  = "/bg.jpg"
+
   depends_on = [
     module.wait_authentik,
     module.wait_authentik_worker

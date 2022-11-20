@@ -1,7 +1,6 @@
 resource random_string redis_password{
   length           = 92
-  special          = true
-  override_special = "!@#$%^&*()_-+="
+  special          = false
 }
 
 resource docker_container redis {

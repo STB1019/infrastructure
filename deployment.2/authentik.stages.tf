@@ -5,7 +5,6 @@ resource "authentik_stage_identification" "identification-stage" {
   passwordless_flow = authentik_flow.authentication-passwordless-flow.uuid
 }
 
-
 resource "authentik_stage_password" "password-stage" {
   name            = "password-stage"
   backends        = ["authentik.core.auth.InbuiltBackend", /*"authentik.core.auth.TokenBackend",*/ "authentik.sources.ldap.auth.LDAPBackend"]
@@ -100,8 +99,6 @@ resource "authentik_stage_prompt" "user-info-stage" {
     authentik_stage_prompt_field.field-ieee-id.id,
   ]
   validation_policies = [
-    authentik_policy_expression.policy-validate-name.id,
-    authentik_policy_expression.policy-validate-surname.id,
     authentik_policy_expression.policy-validate-ieee-id.id,
     authentik_policy_expression.policy-validate-unibs-id.id,
     authentik_policy_expression.policy-validate-unibs-email.id,
@@ -123,6 +120,8 @@ resource "authentik_stage_prompt" "password-set-stage" {
   fields = [
     authentik_stage_prompt_field.field-password.id,
     authentik_stage_prompt_field.field-password-repeat.id,
+    authentik_stage_prompt_field.field-no-save-password.id,
+    authentik_stage_prompt_field.field-no-save-password-repeat.id,
   ]
   validation_policies = [
     authentik_policy_password.policy-password-strength.id,
@@ -156,8 +155,11 @@ resource "authentik_stage_prompt" "committee-error-stage" {
   ]
 }
 
-
 resource "authentik_stage_consent" "explicit-consent-stage" {
   name = "explicit-consent-stage"
   consent_expire_in = "days=3"
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
 }

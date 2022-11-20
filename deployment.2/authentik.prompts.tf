@@ -87,8 +87,32 @@ resource "authentik_stage_prompt_field" "field-password-repeat" {
   ]
 }
 
+resource "authentik_stage_prompt_field" "field-no-save-password" {
+  field_key = "__no_save_password"
+  label     = "__no_save_password"
+  type      = "hidden"
+  placeholder = "true"
+  order     = 100
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_stage_prompt_field" "field-no-save-password-repeat" {
+  field_key = "__no_save_password_repeat"
+  label     = "__no_save_password_repeat"
+  type      = "hidden"
+  placeholder = "true"
+  order     = 200
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
 resource "authentik_stage_prompt_field" "committee-helper" {
-  field_key = "_committee_helper"
+  field_key = "__no_save_committee_helper"
   label     = "committee_helper"
   type      = "static"
   order     = 10
@@ -100,7 +124,7 @@ resource "authentik_stage_prompt_field" "committee-helper" {
 }
 
 resource "authentik_stage_prompt_field" "committee-error-helper" {
-  field_key = "_committee_error_helper"
+  field_key = "__no_save_committee_error_helper"
   label     = "committee_error_helper"
   type      = "static"
   order     = 0

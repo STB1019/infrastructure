@@ -46,6 +46,12 @@ resource "authentik_flow_stage_binding" "sso-enrollment-flow-write" {
   order  = 40
 }
 
+resource "authentik_policy_binding" "sso-enrollment-flow-write-store" {
+  target = authentik_flow_stage_binding.sso-enrollment-flow-write.id
+  policy = authentik_policy_expression.policy-store-attributes.id
+  order  = 1
+}
+
 resource "authentik_flow_stage_binding" "sso-enrollment-flow-login" {
   target = authentik_flow.sso-enrollment-flow.uuid
   stage  = data.authentik_stage.default-source-enrollment-login.id

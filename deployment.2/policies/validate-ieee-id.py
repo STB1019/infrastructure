@@ -6,8 +6,8 @@ if not context['prompt_data']['ieee-id'].isnumeric() or len(context['prompt_data
     ak_message("Invalid ieee id. it must be numeric and long 8 characters")
     return False
 
-if 'attributes' not in context['prompt_data']:
-    context['prompt_data']['attributes'] = {}
-
-context['prompt_data']['attributes']['ieee-id'] = context['prompt_data']['ieee-id']
+#if 'attributes' not in context['prompt_data']:
+#    context['prompt_data']['attributes'] = {}
+#
+#context['prompt_data']['attributes']['ieee-id'] = context['prompt_data']['ieee-id']
 return True

@@ -40,28 +40,6 @@ resource "authentik_policy_expression" "policy-validate-ieee-email" {
   ]
 }
 
-resource "authentik_policy_expression" "policy-validate-name" {
-  name       = "policy-valid-name"
-  expression = templatefile("./policies/store-attribute.py.tpl", {
-    attribute = "nome"
-  })
-  depends_on = [
-    module.wait_authentik,
-    module.wait_authentik_worker
-  ]
-}
-
-resource "authentik_policy_expression" "policy-validate-surname" {
-  name       = "policy-valid-surname"
-  expression = templatefile("./policies/store-attribute.py.tpl", {
-    attribute = "cognome"
-  })
-  depends_on = [
-    module.wait_authentik,
-    module.wait_authentik_worker
-  ]
-}
-
 resource "authentik_policy_expression" "policy-source-if-username" {
   name       = "policy-source-if-username"
   expression = "return 'username' not in context.get('prompt_data', {})"
@@ -146,6 +124,16 @@ resource "authentik_policy_password" "policy-password-strength" {
 resource "authentik_policy_expression" "policy-mfa-no-password" {
   name       = "policy-mfa-no-password"
   expression = file("./policies/mfa-no-password.py")
+
+  depends_on = [
+    module.wait_authentik,
+    module.wait_authentik_worker
+  ]
+}
+
+resource "authentik_policy_expression" "policy-store-attributes" {
+  name       = "policy-store-attributes"
+  expression = file("./policies/set-attributes.py")
 
   depends_on = [
     module.wait_authentik,

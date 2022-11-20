@@ -21,5 +21,12 @@ resource "authentik_flow_stage_binding" "user-settings-flow-userinfo" {
 resource "authentik_flow_stage_binding" "user-settings-flow-write" {
   target = authentik_flow.user-settings-flow.uuid
   stage  = data.authentik_stage.default-source-enrollment-write.id
+  re_evaluate_policies = true
   order  = 30
+}
+
+resource "authentik_policy_binding" "user-settings-flow-write-store" {
+  target = authentik_flow_stage_binding.user-settings-flow-write.id
+  policy  = authentik_policy_expression.policy-store-attributes.id
+  order  = 0
 }

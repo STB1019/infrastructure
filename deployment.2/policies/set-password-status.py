@@ -4,6 +4,6 @@ if 'prompt_data' not in context:
 if 'attributes' not in context['prompt_data']:
     context['prompt_data']['attributes'] = {}
 
-context['prompt_data']['attributes']['has_password'] = True
+context['prompt_data']['has_password'] = True
     
 return True

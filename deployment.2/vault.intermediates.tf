@@ -44,5 +44,5 @@ module oidc_intermediate {
     allow_any_name      = true
     enforce_hostnames   = false
     root_cert_pem       = tls_self_signed_cert.root_ca.cert_pem
-    keybits             = 521
+    keybits             = 256
 }

@@ -87,11 +87,29 @@ terraform init
 terraform apply -var-file=vars.tfvars
 ```
  
-# After
+## After
  - refresh vault https certificates by doing `docker kill --signal="SIGHUP" vault`
  - get akadmin user password: `cat terraform.tfstate | jq -r '.resources[] | select( .name == "akadmin_password" ) | .instances[0].attributes.result'`
-
+ - Go to authentik and set the new tenant as default. You can now remove authentik-default tenant
+ - Verify that Authentik uses our custom certificate
 
 
 # Deployment 3
+
+Install kubernetes (k3s) by using the generated `install.config.yaml` from deployment.2
+with the following command and deploy the third part of the deployment
+
+```bash
+curl -sfL https://get.k3s.io | sh -s - --config "${PWD}/config/k3s/install.config.k3s"
+cd deployment.3
+cat << EOF > vars.tfvars
+config_folder="${PWD}/../config" 
+data_folder="${PWD}/../data"
+vault_token="${VAULT_TOKEN}"
+authentik_token="${AUTHENTIK_TOKEN}"
+EOF
+terraform init
+terraform apply -var-file=vars.tfvars
+```
+
 
