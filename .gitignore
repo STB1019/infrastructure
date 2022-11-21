@@ -1,5 +1,7 @@
 config/
+!config/.keep
 data/
+!data/.keep
 .terraform/
 *.tfstate
 *.tfstate.backup
@@ -11,3 +13,4 @@ data/
 creds
 !deployment*/config
 bin
+old/
