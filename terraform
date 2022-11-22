@@ -9,6 +9,9 @@ CMD=$2
 if [ "$CMD" == "apply" ]; then
     CMD="apply -var network_name=${NET_NAME} -var conf_dir=$(pwd)/config -var data_dir=$(pwd)/data"
 fi
+if [ "$CMD" == "plan" ]; then
+    CMD="plan -var network_name=${NET_NAME} -var conf_dir=$(pwd)/config -var data_dir=$(pwd)/data"
+fi
 shift
 shift
 

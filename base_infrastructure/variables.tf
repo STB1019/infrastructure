@@ -2,6 +2,22 @@ variable domain{
     type    = string
 }
 
+variable org{
+    type    = string
+}
+
+variable locality{
+    type    = string
+}
+
+variable province{
+    type    = string
+}
+
+variable nation{
+    type    = string
+}
+
 variable data_dir{
     type    = string
 }
@@ -15,6 +31,10 @@ variable user{
 }
 
 variable network_name{
+    type    = string
+}
+
+variable machine_ip{
     type    = string
 }
 
