@@ -16,6 +16,11 @@ resource docker_container nginx {
     host_path       = "${var.data_dir}/nginx/ssl"
   }
 
+  volumes{
+    container_path  = "/var/www/static"
+    host_path       = dirname(local_file.static_dir.filename)
+  }
+
   healthcheck{
     test          = ["CMD", "wget", "http://127.0.0.1:8081", "-O", "-"]
     interval      = "30s"

@@ -18,6 +18,12 @@ resource local_sensitive_file nginx_key{
   file_permission = 0640
 }
 
+resource local_file static_dir{
+  content         = ""
+  filename        = "${var.data_dir}/nginx/static/.keep"
+  file_permission = 0640
+}
+
 resource local_file nginx_inc_rp{
   content         = file("${path.module}/config/includes/reverse_proxy.conf")
   filename        = "${var.conf_dir}/nginx/includes/reverse_proxy.conf"
