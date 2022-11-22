@@ -9,3 +9,4 @@ module vault_deploy{
   vault_key_shares = var.vault_key_shares
   vault_key_threshold = var.vault_key_threshold
 }
+
