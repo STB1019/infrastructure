@@ -3,6 +3,7 @@
 get_token() {
     RESULT=$(curl -s -o /dev/null -w "%{http_code}" "http://${CONTAINER_NAME}:8200/v1/sys/health")
     if [ ! "$RESULT" == "200" ]; then
+        echo >&2 "$RESULT"
         exit 200
     fi
     TOKEN=$(cat "${CONF_DIR}/creds" | jq -r '.root_token')
@@ -16,7 +17,9 @@ unseal() {
         if [ "$RESULT" == "503" ]; then
             for key in $(cat "${CONF_DIR}/creds" | jq -r '.keys[]'); do
                 K_RESULT=$(curl -s -o "/dev/null" -w "%{http_code}" "http://${CONTAINER_NAME}:8200/v1/sys/unseal" -X POST -H "Content-Type: application/json" -d '{"key": "'"$key"'"}')
+                sleep 0.5
             done
+            sleep 2
             return
         fi
         echo >&2 "${RESULT}"

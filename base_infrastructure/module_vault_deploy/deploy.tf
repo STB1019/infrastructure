@@ -47,7 +47,7 @@ resource docker_container vault {
 }
 
 module vault_unseal{
-  source = "./module_vault_init"
+  source = "../module_vault_init"
 
   container_name = docker_container.vault.name
   conf_dir       = dirname(local_file.vault_conf.filename)

@@ -4,6 +4,15 @@ NET_NAME="base_infrastructure"
 #docker build -f terraform.dockerfile -t tetofonta/terraform:latest config
 docker network inspect "${NET_NAME}" >/dev/null 2>&1 || docker network create --driver bridge "${NET_NAME}"
 
+DEPLOYMENT=$1
+CMD=$2
+if [ "$CMD" == "apply" ]; then
+    CMD="apply -var network_name=${NET_NAME} -var conf_dir=$(pwd)/config -var data_dir=$(pwd)/data"
+fi
+shift
+shift
+
+
 docker run -it --rm \
     --user "$(id -g):$(getent group docker | cut -d: -f3)" \
     --network "${NET_NAME}" \
@@ -11,4 +20,4 @@ docker run -it --rm \
     --mount type=bind,source="$(pwd)"/config,target="$(pwd)"/config \
     --mount type=bind,source="$(pwd)"/base_infrastructure,target=/base_infrastructure \
     --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
-    tetofonta/terraform:latest -chdir=/base_infrastructure apply -var network_name=${NET_NAME} -var conf_dir="$(pwd)/config" -var data_dir="$(pwd)/data" $@
+    tetofonta/terraform:latest -chdir=/${DEPLOYMENT} $CMD $@
