@@ -1,7 +1,7 @@
 resource docker_container nginx {
   name      = "nginx"
   hostname  = "nginx"
-  image     = docker_image.nginx.image_id
+  image     = var.use_http3 ? docker_image.nginx_http3[0].image_id : docker_image.nginx[0].image_id
 
   restart   = "unless-stopped"
 
@@ -32,16 +32,25 @@ resource docker_container nginx {
   ports {
     internal = 80
     external = 80
+    protocol = "tcp"
   }
 
   ports {
     internal = 443
     external = 443
+    protocol = "tcp"
+  }
+
+  ports {
+    internal = 443
+    external = 443
+    protocol = "udp"
   }
 
   ports {
     internal = 8080
     external = 8080
+    protocol = "tcp"
   }
 
   log_driver = "json-file"

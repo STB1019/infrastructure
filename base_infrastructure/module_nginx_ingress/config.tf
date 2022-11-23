@@ -19,7 +19,7 @@ resource local_sensitive_file key{
 }
 
 resource local_file nginx_conf{
-  content         = templatefile("${path.module}/config/rev_proxy.conf.tpl", {
+  content         = templatefile("${path.module}/config${var.use_http3 ? "3" : ""}/rev_proxy.conf.tpl", {
     ssl_certificate = "ssl/${var.srv_name}/server.crt",
     ssl_key         = "ssl/${var.srv_name}/server.key"
     srv_name        = var.srv_name,

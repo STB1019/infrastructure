@@ -33,6 +33,8 @@ if [ -z "${CONTAINER_NAME}" ]; then echo >&2 'Error: CONTAINER_NAME not specifie
 CONF_DIR="$2"
 if [ -z "${CONF_DIR}" ]; then echo >&2 'Error: CONF_DIR not specified'; exit 1; fi
 
+sleep 5
+
 RESULT=$(curl -s "http://${CONTAINER_NAME}:8200/v1/sys/init" | jq '.initialized')
 
 if [ "$RESULT" == "true" ]; then

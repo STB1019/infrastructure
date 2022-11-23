@@ -32,3 +32,8 @@ variable "machine_ip" {
 variable "conf_dir" {
   type = string
 }
+
+variable "use_http3"{
+  type = bool
+  default = false
+}

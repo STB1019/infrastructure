@@ -25,21 +25,21 @@ resource local_file static_dir{
 }
 
 resource local_file nginx_inc_rp{
-  content         = file("${path.module}/config/includes/reverse_proxy.conf")
+  content         = file("${path.module}/config${var.use_http3 ? "3" : ""}/includes/reverse_proxy.conf")
   filename        = "${var.conf_dir}/nginx/includes/reverse_proxy.conf"
   file_permission = 0644
 }
 
 
 resource local_file nginx_inc_ssl{
-  content         = file("${path.module}/config/includes/ssl_upstream.conf")
+  content         = file("${path.module}/config${var.use_http3 ? "3" : ""}/includes/ssl_upstream.conf")
   filename        = "${var.conf_dir}/nginx/includes/ssl_upstream.conf"
   file_permission = 0644
 }
 
 
 resource local_file nginx_conf{
-  content         = templatefile("${path.module}/config/common.conf.tpl", {
+  content         = templatefile("${path.module}/config${var.use_http3 ? "3" : ""}/common.conf.tpl", {
     default_ssl_certificate = "ssl/default/server.crt",
     default_ssl_key         = "ssl/default/server.key"
   })

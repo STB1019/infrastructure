@@ -52,3 +52,32 @@ variable "vault_key_threshold"{
     description = "The number of key shares required to unseal the vault server"
     type        = number
 }
+
+variable "acl_network" {
+  type = string
+}
+
+variable "host_cname" {
+  type = string
+}
+
+variable "forwarders" {
+  type = string
+  default = "1.1.1.1;\n1.0.0.1;"
+}
+
+variable "tsig_keyname" {
+    type = string
+}
+
+variable "tsig_secret" {
+    type = string
+}
+
+variable "tsig_algorithm" {
+    type = string
+}
+
+variable "user_id"{
+    type = string
+}
