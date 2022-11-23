@@ -26,7 +26,7 @@ resource docker_container bind {
 
   ports {
     internal = 53
-    external = 54 #TODO
+    external = 53
     protocol = "udp"
   }
 

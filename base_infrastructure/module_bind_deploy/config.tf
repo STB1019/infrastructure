@@ -12,7 +12,7 @@ resource local_file bind_config{
 }
 
 resource local_file zone_config{
-    content = fileexists("${var.data_dir}/bind/zones/${var.domain}.zone") ? file("${var.data_dir}/bind/zones/${var.domain}.zone") : templatefile("${path.module}/config/zone", {
+    content = templatefile("${path.module}/config/zone", {
         zone = var.domain,
         machine_ip = var.machine_ip,
         host_cname = var.host_cname
