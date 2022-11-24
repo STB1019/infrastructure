@@ -1,0 +1,12 @@
+$ORIGIN ${zone}.
+$TTL 5m
+
+${zone}.    IN    SOA     ns1.${zone}. stb1019_executive.ieee.org. (
+                          20221123     ; serial
+                          4h           ; refresh
+                          15m          ; retry
+                          8h           ; expire
+                          2m)          ; negative caching TTL
+
+        IN      NS      ns1.${zone}.
+ns1     IN      A       ${machine_ip}

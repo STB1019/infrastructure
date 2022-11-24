@@ -5,6 +5,12 @@ variable "acl_network" {
 variable "domain"{
   type = string
 }
+variable "app_subdomain"{
+  type = string
+}
+variable "subdomain"{
+  type = string
+}
 
 variable "conf_dir" {
   type = string
@@ -18,9 +24,6 @@ variable "machine_ip"{
   type = string
 }
 
-variable "host_cname" {
-  type = string
-}
 variable "forwarders" {
   type = string
 }
@@ -43,4 +46,8 @@ variable "tsig_algorithm" {
 
 variable "user_id"{
   type = string
+}
+
+variable "records"{
+  type = list(string)
 }

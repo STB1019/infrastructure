@@ -13,7 +13,7 @@ resource docker_container bind {
 
   volumes{
     container_path  = "/var/lib/bind/"
-    host_path       = dirname(local_file.zone_config.filename)
+    host_path       = dirname(local_file.main_zone_config.filename)
   }
 
   volumes{

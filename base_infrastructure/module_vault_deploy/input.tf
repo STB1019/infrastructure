@@ -22,11 +22,6 @@ variable domain{
     type        = string
 }
 
-variable "vault_host"{
-    description = "The hostname of the vault server"
-    type        = string
-}
-
 variable "vault_key_shares"{
     description = "The number of key shares to use for the vault server"
     type        = number

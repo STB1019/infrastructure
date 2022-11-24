@@ -2,6 +2,14 @@ variable domain{
     type    = string
 }
 
+variable subdomain{
+    type    = string
+}
+
+variable app_subdomain{
+    type    = string
+}
+
 variable org{
     type    = string
 }

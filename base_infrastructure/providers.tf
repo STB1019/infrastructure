@@ -20,8 +20,8 @@ provider "dns" {
   update {
     server        = module.bind_deploy.container_name
     port          = 53
-    key_name      = var.tsig_keyname
-    key_algorithm = var.tsig_algorithm
-    key_secret    = var.tsig_secret
+    key_name      = "dyn.app.ieee.elux.ing.unibs.it."
+    key_algorithm = "hmac-sha256"
+    key_secret    = "s5fLido4r/4UTtN6WM3+j7GtyECAVU7mCHtFAl04ex8="
   }
 }
