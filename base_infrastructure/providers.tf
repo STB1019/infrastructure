@@ -16,12 +16,12 @@ provider vault {
     token = module.vault_deploy.token
 }
 
-provider "dns" {
-  update {
-    server        = module.bind_deploy.container_name
-    port          = 53
-    key_name      = "dyn.app.ieee.elux.ing.unibs.it."
-    key_algorithm = "hmac-sha256"
-    key_secret    = "s5fLido4r/4UTtN6WM3+j7GtyECAVU7mCHtFAl04ex8="
+provider dns {
+  update{
+    server = module.bind_deploy.container_name
+    port = 53
+    key_name      = module.bind_deploy.tsig.keyname
+    key_algorithm = module.bind_deploy.tsig.algorithm
+    key_secret    = module.bind_deploy.tsig.secret
   }
 }

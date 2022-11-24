@@ -58,3 +58,11 @@ module vault_unseal{
     docker_container.vault
   ]
 }
+
+module vault_wait{
+  source = "../module_docker_wait"
+  container_name = docker_container.vault.name
+  depends_on = [
+    module.vault_unseal
+  ]
+}

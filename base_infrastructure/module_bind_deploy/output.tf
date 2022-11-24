@@ -9,8 +9,17 @@ output "container_ip" {
 output "tsig" {
   value = {
     algorithm = "hmac-sha256",
+    keyname = "dyn.${var.subdomain}${var.domain}.",
+    secret = base64sha256(random_password.subdomain_tsig_key.result)
+  }
+  sensitive = true
+}
+
+output "app_tsig" {
+  value = {
+    algorithm = "hmac-sha256",
     keyname = "dyn.${var.app_subdomain}${var.domain}.",
-    secret = base64sha256(random_password.tsig_key.result)
+    secret = base64sha256(random_password.app_subdomain_tsig_key.result)
   }
   sensitive = true
 }

@@ -8,10 +8,24 @@ module "http_ca" {
 
   root_backend = module.root_ca.backend
   root_bundle = module.root_ca.bundle
-  common_name = var.domain
+  common_name = "${var.subdomain}${var.domain}"
 
-  allowed_domains = [var.domain, "localhost", var.machine_ip]
-  allowed_uri_sans = ["*.${var.domain}", "*.${var.domain}:*", "${var.domain}:*", "localhost:*", "${var.machine_ip}:*"]
+  allowed_domains = [
+    "${var.subdomain}${var.domain}", 
+    "${var.app_subdomain}${var.domain}", 
+    "localhost", 
+    var.machine_ip
+  ]
+  allowed_uri_sans = [
+    "*.${var.subdomain}${var.domain}", 
+    "*.${var.subdomain}${var.domain}:*", 
+    "${var.subdomain}${var.domain}:*",
+    "*.${var.app_subdomain}${var.domain}", 
+    "*.${var.app_subdomain}${var.domain}:*", 
+    "${var.app_subdomain}${var.domain}:*", 
+    "localhost:*", 
+    "${var.machine_ip}:*"
+  ]
 
   allow_any_name = false
   enforce_hostnames = true

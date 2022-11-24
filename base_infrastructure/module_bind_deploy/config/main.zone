@@ -10,5 +10,3 @@ ${zone}.    IN    SOA     ns1.${zone}. stb1019_executive.ieee.org. (
 
         IN      NS      ns1.${zone}.
 ns1     IN      A       ${machine_ip}
-
-${records}

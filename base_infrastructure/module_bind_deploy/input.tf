@@ -32,22 +32,6 @@ variable "network_name" {
   type = string
 }
 
-variable "tsig_keyname" {
-    type = string
-}
-
-variable "tsig_secret" {
-    type = string
-}
-
-variable "tsig_algorithm" {
-    type = string
-}
-
 variable "user_id"{
   type = string
-}
-
-variable "records"{
-  type = list(string)
 }

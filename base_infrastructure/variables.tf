@@ -51,6 +51,11 @@ variable "vault_host"{
     type        = string
 }
 
+variable "pg_host"{
+    description = "The hostname of the pg server"
+    type        = string
+}
+
 variable "vault_key_shares"{
     description = "The number of key shares to use for the vault server"
     type        = number
@@ -73,19 +78,6 @@ variable "forwarders" {
   type = string
   default = "1.1.1.1;\n1.0.0.1;"
 }
-
-variable "tsig_keyname" {
-    type = string
-}
-
-variable "tsig_secret" {
-    type = string
-}
-
-variable "tsig_algorithm" {
-    type = string
-}
-
 variable "user_id"{
     type = string
 }

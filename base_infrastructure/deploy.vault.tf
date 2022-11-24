@@ -23,13 +23,8 @@ module vault_ingress{
   depends_on = [module.vault_deploy]
 }
 
-resource "dns_cname_record" "vault_cname" {
-  zone  = "${var.app_subdomain}${var.domain}."
+resource "dns_cname_record" "vault_dns" {
+  zone  = "${var.subdomain}${var.domain}."
   name  = var.vault_host
-  cname = "${var.host_cname}."
-
-  depends_on = [
-    module.bind_deploy,
-    module.vault_deploy
-  ]
+  cname = "${var.domain}."
 }

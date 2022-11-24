@@ -1,4 +1,9 @@
-resource random_password tsig_key {
+resource random_password subdomain_tsig_key {
+  length           = 128
+  special          = true
+}
+
+resource random_password app_subdomain_tsig_key {
   length           = 128
   special          = true
 }
@@ -12,8 +17,12 @@ resource local_file bind_config{
         forwarders = var.forwarders
 
         tsig_algorithm = "hmac-sha256",
-        tsig_keyname = "dyn.${var.app_subdomain}${var.domain}.",
-        tsig_secret = base64sha256(random_password.tsig_key.result),
+        tsig_keyname = "dyn.${var.subdomain}${var.domain}.",
+        tsig_secret = base64sha256(random_password.subdomain_tsig_key.result),
+
+        app_tsig_algorithm = "hmac-sha256",
+        app_tsig_keyname = "dyn.${var.app_subdomain}${var.domain}.",
+        app_tsig_secret = base64sha256(random_password.app_subdomain_tsig_key.result),
     })
     filename = "${var.conf_dir}/bind/conf/named.conf"
     file_permission = 0644
@@ -22,8 +31,7 @@ resource local_file bind_config{
 resource local_file main_zone_config{
     content = templatefile("${path.module}/config/main.zone", {
         zone = "${var.subdomain}${var.domain}",
-        machine_ip = var.machine_ip,
-        records = join("\n", var.records)
+        machine_ip = var.machine_ip
     })
     filename = "${var.data_dir}/bind/zones/${var.subdomain}${var.domain}.zone"
     file_permission = 0640

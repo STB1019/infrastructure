@@ -64,3 +64,11 @@ resource docker_container nginx {
     name = var.network_name
   }
 }
+
+module nginx_wait{
+  source = "../module_docker_wait"
+  container_name = docker_container.nginx.name
+  depends_on = [
+    docker_container.nginx
+  ]
+}

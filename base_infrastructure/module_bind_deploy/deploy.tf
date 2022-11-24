@@ -26,15 +26,9 @@ resource docker_container bind {
 
   ports {
     internal = 53
-    external = 53
+    external = 54
     protocol = "udp"
   }
-
-  /*ports {
-    internal = 53
-    external = 53
-    protocol = "tcp"
-  }*/
 
   log_driver = "json-file"
   log_opts = {
