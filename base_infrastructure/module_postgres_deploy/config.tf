@@ -3,7 +3,7 @@ resource vault_pki_secret_backend_cert postgres_server_crt {
   name = var.server_backend
 
   common_name = "${var.domain}"
-  uri_sans = ["${var.domain}"]
+  uri_sans = ["${var.domain}", "postgres"]
   ip_sans = ["127.0.0.1", var.machine_ip]
   auto_renew = true
 }
