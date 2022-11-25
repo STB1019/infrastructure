@@ -4,7 +4,6 @@ resource vault_pki_secret_backend_cert postgres_provision_crt {
 
   common_name = var.admin_user
   auto_renew = true
-  ttl = "5m"
 }
 
 resource local_file pg_provision_crt{

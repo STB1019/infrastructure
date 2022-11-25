@@ -7,7 +7,7 @@ docker network inspect "${NET_NAME}" >/dev/null 2>&1 || docker network create --
 DEPLOYMENT=$1
 CMD=$2
 if [ "$CMD" == "apply" -o "$CMD" == "plan" -o "$CMD" == "destroy" ]; then
-    CMD="${CMD} -var network_name=${NET_NAME} -var conf_dir=$(pwd)/config -var data_dir=$(pwd)/data"
+    CMD="${CMD} -var network_name=${NET_NAME} -var conf_dir=$(pwd)/config -var data_dir=$(pwd)/data -var assets_dir=$(pwd)/assets -var blueprints_dir=$(pwd)/blueprints"
 fi
 shift
 shift

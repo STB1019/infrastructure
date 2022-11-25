@@ -22,6 +22,9 @@ ssl_stapling_verify on;
 resolver 1.1.1.1 1.0.0.1 valid=300s;
 resolver_timeout 5s;
 
+error_log /dev/stderr warn;
+access_log /dev/stderr;
+
 gzip off; #https://en.wikipedia.org/wiki/BREACH
 
 server {

@@ -30,6 +30,14 @@ variable data_dir{
     type    = string
 }
 
+variable assets_dir{
+    type    = string
+}
+
+variable "blueprints_dir" {
+  type = string
+}
+
 variable conf_dir{
     type    = string
 }
@@ -53,6 +61,11 @@ variable "vault_host"{
 
 variable "pg_host"{
     description = "The hostname of the pg server"
+    type        = string
+}
+
+variable "authentik_host"{
+    description = "The hostname of the sso server"
     type        = string
 }
 

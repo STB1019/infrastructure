@@ -22,6 +22,9 @@ resolver_timeout 5s;
 
 gzip off; #https://en.wikipedia.org/wiki/BREACH
 
+error_log /dev/stderr warn;
+access_log /dev/stderr;
+
 server {
     listen 8080 default_server;
 
