@@ -1,0 +1,430 @@
+version: 1
+metadata:
+  name: flow_enrollment
+  label:
+    author: Stefano Fontana
+    date: nov 2022
+entries:
+
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_password_change
+      required: false
+  
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_gh_sso_auth
+      required: false
+
+  - id: flow
+    model: authentik_flows.flow
+    attrs:
+      designation: enrollment
+      name: Benvenuto in IEEE STB1019
+      title: Benvenuto in IEEE STB1019
+      layout: sidebar_left
+      compatibility_mode: true
+    identifiers:
+      slug: ieeesb-enrollment
+
+#PROMPTS==========================================================================
+  - id: field-prompt-username
+    model: authentik_stages_prompt.prompt
+    attrs:
+      order: 10
+      placeholder: Username
+      placeholder_expression: false
+      required: true
+      type: username
+    identifiers:
+      field_key: username
+      label: Username
+
+  - id: static-personal-info
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      field_key: __no_save_static_personal_info
+      label: Informazioni Personali
+    attrs:
+      order: 100
+      placeholder: "<h4>Informazioni Personali</h4>"
+      placeholder_expression: false
+      required: false
+      type: static
+
+  - id: field-prompt-name
+    model: authentik_stages_prompt.prompt
+    attrs:
+      order: 110
+      placeholder: Nome
+      placeholder_expression: false
+      required: true
+      type: text
+    identifiers:
+      field_key: nome
+      label: Nome
+
+  - id: field-prompt-surname
+    model: authentik_stages_prompt.prompt
+    attrs:
+      order: 120
+      placeholder: Cognome
+      placeholder_expression: false
+      required: true
+      type: text
+    identifiers:
+      field_key: cognome
+      label: Cognome
+
+  - id: field-prompt-surname-no-save
+    model: authentik_stages_prompt.prompt
+    attrs:
+      order: 500
+      type: hidden
+    identifiers:
+      field_key: __no_save_cognome
+      label: __no_save_cognome
+
+  - id: field-prompt-name-no-save
+    model: authentik_stages_prompt.prompt
+    attrs:
+      order: 501
+      type: hidden
+    identifiers:
+      field_key: __no_save_nome
+      label: __no_save_nome
+
+  - id: static-unibs-info
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      field_key: __no_save_unibs_info
+      label: "Credenziali UNIBS"
+    attrs:
+      order: 200
+      placeholder: "<b>Credenziali UNIBS</b>"
+      placeholder_expression: false
+      required: false
+      type: static
+    
+  - id: field-prompt-unibs-email
+    model: authentik_stages_prompt.prompt
+    attrs:
+      order: 210
+      placeholder: n.cognome@[studenti.]unibs.it
+      placeholder_expression: false
+      required: true
+      type: email
+    identifiers:
+      field_key: email
+      label: Email UNIBS
+  
+  - id: field-prompt-unibs-code
+    model: authentik_stages_prompt.prompt
+    attrs:
+      order: 220
+      placeholder: XXXXXX
+      placeholder_expression: false
+      required: true
+      type: text
+    identifiers:
+      field_key: unibs_code
+      label: Matricola UNIBS
+  
+  - id: static-ieee-info
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      field_key: __no_save_ieee_info
+      label: "Credenziali IEEE"
+    attrs:
+      order: 300
+      placeholder: "<b>Credenziali IEEE</b>"
+      placeholder_expression: false
+      required: false
+      type: static
+    
+  - id: field-prompt-ieee-email
+    model: authentik_stages_prompt.prompt
+    attrs:
+      order: 310
+      placeholder: nome.cognome@ieee.org
+      placeholder_expression: false
+      required: true
+      type: email
+    identifiers:
+      field_key: ieee_email
+      label: Email IEEE
+  
+  - id: field-prompt-ieee-code
+    model: authentik_stages_prompt.prompt
+    attrs:
+      order: 320
+      placeholder: XXXXXXXX
+      placeholder_expression: false
+      required: true
+      type: text
+    identifiers:
+      field_key: ieee_code
+      label: Matricola IEEE
+
+#POLICIES=========================================================================
+
+  - id: action-merge-name-surname
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: action-merge-name-surname
+    attrs:
+      expression: |
+        if "nome" not in context.get("prompt_data", {}) or "cognome" not in context.get("prompt_data", {}):
+          return False
+        if "name" not in context["prompt_data"]:
+          context["prompt_data"]["name"] = context["prompt_data"]["nome"].strip().capitalize() + " " + context["prompt_data"]["cognome"].strip().capitalize()
+        return True
+
+  - id: policy-validate-unibs-email
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: policy-validate-unibs-email
+    attrs:
+      expression: |
+        if 'email' not in context.get('prompt_data', {}):
+          return False
+        if not context["prompt_data"]["email"].endswith("@studenti.unibs.it") and not context["prompt_data"]["email"].endswith("@unibs.it"):
+          ak_message("Unibs email deve essere nella forma n.cognome<numero>@[studenti.]unibs.it")
+          return False
+        return True
+
+  - id: policy-validate-ieee-email
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: policy-validate-ieee-email
+    attrs:
+      expression: |
+        if 'ieee_email' not in context.get('prompt_data', {}):
+          return False
+        if not context["prompt_data"]["ieee_email"].endswith("@ieee.org"):
+          ak_message("IEEE email deve essere nella forma nome.cognome@ieee.org")
+          return False
+        return True
+      
+  - id: policy-validate-unibs-code
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: policy-validate-unibs-code
+    attrs:
+      expression: |
+        if 'unibs_code' not in context.get('prompt_data', {}):
+          return False
+        if not context["prompt_data"]["unibs_code"].isnumeric() or len(context["prompt_data"]["unibs_code"].strip()) != 6:
+          ak_message("La matricola unibs è composta da sei cifre decimali!")
+          return False
+        return True
+
+  - id: policy-validate-ieee-code
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: policy-validate-ieee-code
+    attrs:
+      expression: |
+        if 'ieee_code' not in context.get('prompt_data', {}):
+          return False
+        if not context["prompt_data"]["ieee_code"].isnumeric() or len(context["prompt_data"]["ieee_code"].strip()) != 8:
+          ak_message("La matricola IEEE è composta da otto cifre decimali!")
+          return False
+        return True
+
+  - id: policy-sso-username-set
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: policy-sso-username-set
+    attrs:
+      expression: |
+        return 'username' not in context.get('prompt_data', {})
+
+  - id: policy-gh-organization
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: policy-gh-organization
+    attrs:
+      expression: |
+        import requests
+        if not "source" in context or context["source"].provider_type != "github":
+          return True
+        accepted_org = "STB1019"
+        connection = context["goauthentik.io/sources/connection"]
+        access_token = connection.access_token
+        github_username = context["oauth_userinfo"]
+        orgs_response = requests.get("https://api.github.com/user/orgs", auth=(github_username["login"], access_token), headers={"accept": "application/vnd.github.v3+json"})
+        orgs_response.raise_for_status()
+        orgs = orgs_response.json()
+        user_matched = any(org['login'] == accepted_org for org in orgs)
+        if not user_matched:
+          ak_message(f"User is not member of {accepted_org}.")
+        return user_matched
+
+
+#STAGES===========================================================================
+  - id: stage-invitation
+    model: authentik_stages_invitation.invitationstage
+    identifiers:
+      name: stage-invitation
+    attrs:
+      continue_flow_without_invitation: false
+
+  - id: stage-prompt-username
+    model: authentik_stages_prompt.promptstage
+    attrs:
+      fields:
+        - !KeyOf field-prompt-username
+    identifiers:
+      name: stage-prompt-username
+
+  - id: stage-prompt-personal-info
+    model: authentik_stages_prompt.promptstage
+    attrs:
+      fields:
+        - !KeyOf static-personal-info
+        - !KeyOf field-prompt-name
+        - !KeyOf field-prompt-surname
+        - !KeyOf field-prompt-name-no-save
+        - !KeyOf field-prompt-surname-no-save
+      validation_policies:
+        - !KeyOf action-merge-name-surname
+    identifiers:
+      name: stage-prompt-personal-info
+
+  - id: stage-prompt-unibs
+    model: authentik_stages_prompt.promptstage
+    attrs:
+      fields:
+        - !KeyOf static-unibs-info
+        - !KeyOf field-prompt-unibs-email
+        - !KeyOf field-prompt-unibs-code
+      validation_policies:
+        - !KeyOf policy-validate-unibs-email
+        - !KeyOf policy-validate-unibs-code
+    identifiers:
+      name: stage-prompt-unibs
+
+  - id: stage-prompt-ieee
+    model: authentik_stages_prompt.promptstage
+    attrs:
+      fields:
+        - !KeyOf static-ieee-info
+        - !KeyOf field-prompt-ieee-email
+        - !KeyOf field-prompt-ieee-code
+      validation_policies:
+        - !KeyOf policy-validate-ieee-email
+        - !KeyOf policy-validate-ieee-code
+    identifiers:
+      name: stage-prompt-ieee
+
+  - id: stage-enrollment-write
+    model: authentik_stages_user_write.userwritestage
+    identifiers:
+      name: stage-enrollment-write
+  
+  - id: stage-enrollment-login
+    model: authentik_stages_user_login.userloginstage
+    attrs:
+      session_duration: seconds=0
+    identifiers:
+      name: stage-enrollment-login
+
+#BINDINGS=========================================================================
+  - id: binding-stage-invitation
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 0
+      stage:  !KeyOf stage-invitation
+      target: !KeyOf flow
+
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 100
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, policy-is-sso-flow]] #from 110
+      target: !KeyOf binding-stage-invitation
+    attrs:
+      negate: true
+      enabled: true
+      timeout: 30
+
+  - id: binding-stage-prompt-username
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 1
+      stage: !KeyOf stage-prompt-username
+      target: !KeyOf flow
+
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 100
+      policy: !KeyOf policy-sso-username-set
+      target: !KeyOf binding-stage-prompt-username
+
+  - id: binding-stage-prompt-password-change
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 2
+      stage: !Find [authentik_stages_prompt.promptstage, [name, stage-prompt-password-change]] #from 100
+      target: !KeyOf flow
+
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 100
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, policy-is-sso-flow]] #from 110
+      target: !KeyOf binding-stage-prompt-password-change
+    attrs:
+      negate: false
+  
+  - id: binding-stage-prompt-personal-info
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 3
+      stage: !KeyOf stage-prompt-personal-info
+      target: !KeyOf flow
+
+  - id: binding-stage-prompt-unibs
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 4
+      stage: !KeyOf stage-prompt-unibs
+      target: !KeyOf flow
+
+  - id: binding-stage-prompt-ieee
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 5
+      stage: !KeyOf stage-prompt-ieee
+      target: !KeyOf flow
+  
+  - id: binding-stage-enrollment-write
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 6
+      stage: !KeyOf stage-enrollment-write
+      target: !KeyOf flow
+    attrs:
+      evaluate_on_plan: false
+      re_evaluate_policies: true
+      policy_engine_mode: all
+  
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 100
+      policy: !Find [authentik_policies_expression.expressionpolicy,[name, action-store-flow-attributes]] #From 100
+      target: !KeyOf binding-stage-enrollment-write
+  
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 100
+      policy: !KeyOf policy-gh-organization
+      target: !KeyOf flow
+  
+  - id: binding-stage-enrollment-login
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 7
+      stage: !KeyOf stage-enrollment-login
+      target: !KeyOf flow

@@ -1,0 +1,39 @@
+version: 1
+metadata:
+  name: github_source
+  label:
+    author: Stefano Fontana
+    date: nov 2022
+entries:
+
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_gh_sso_auth
+      required: false
+  
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_enrollment
+      required: false
+
+  - id: github-oauth
+    model: authentik_sources_oauth.oauthsource
+    identifiers:
+      slug: github-oauth
+      name: github
+    attrs:
+      enable: true
+      user_matching_mode: username_deny
+      user_path_template: users/github
+      icon: null
+      provider_type: github
+
+      consumer_key: GITHUB_OAUTH_CLIENT_ID
+      consumer_secret: GITHUB_OAUTH_CLIENT_SECRET
+      additional_scopes: read:user read:org
+
+      authentication_flow: !Find [authentik_flows.flow, [slug, ieeesb-gh-sso-auth]] #From 110
+      enrollment_flow: !Find [authentik_flows.flow, [slug, ieeesb-enrollment]] #From 120
+      

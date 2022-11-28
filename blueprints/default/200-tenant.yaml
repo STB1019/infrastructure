@@ -1,0 +1,25 @@
+metadata:
+  name: Tenant
+version: 1
+entries:
+
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_authentication
+      required: false
+
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: Default - Invalidation flow
+      required: false
+
+  - attrs:
+      flow_authentication: !Find [authentik_flows.flow, [slug, ieeesb-auth-flow]]
+      flow_invalidation: !Find [authentik_flows.flow, [slug, default-invalidation-flow]]
+      #flow_user_settings: !Find [authentik_flows.flow, [slug, default-user-settings-flow]]
+    identifiers:
+      domain: sso.sb.ieee.elux.ing.unibs.it
+      default: True
+    model: authentik_tenants.tenant

@@ -1,0 +1,57 @@
+version: 1
+metadata:
+  name: flow_gh_sso_auth
+  label:
+    author: Stefano Fontana
+    date: nov 2022
+entries:
+  - id: flow
+    attrs:
+      designation: authentication
+      name: Accedi a STB1019 - GH
+      title: Accedi a STB1019 - GH
+      layout: stacked
+      compatibility_mode: true
+    identifiers:
+      slug: ieeesb-gh-sso-auth
+    model: authentik_flows.flow
+
+#POLICIES=========================================================================
+  - id: policy-is-sso-flow
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: policy-is-sso-flow
+    attrs:
+      expression: |
+        return ak_is_sso_flow
+  
+  - id: policy-not-sso-flow
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: policy-not-sso-flow
+    attrs:
+      expression: |
+        return not ak_is_sso_flow
+
+#STAGES===========================================================================
+  - id: stage-gh-ssh-login
+    model: authentik_stages_user_login.userloginstage
+    attrs:
+      session_duration: seconds=0
+    identifiers:
+      name: stage-gh-ssh-login
+
+#BINDINGS=========================================================================
+  - model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 0
+      stage: !KeyOf stage-gh-ssh-login
+      target: !KeyOf flow
+  
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 100
+      policy: !KeyOf policy-is-sso-flow
+      target: !KeyOf flow
+    
+  

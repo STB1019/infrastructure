@@ -1,0 +1,109 @@
+version: 1
+metadata:
+  name: flow_authentication
+  label:
+    author: Stefano Fontana
+    date: nov 2022
+entries:
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: github_source
+      required: false
+
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_password_change
+      required: false
+
+  - id: flow
+    model: authentik_flows.flow
+    identifiers:
+      slug: ieeesb-auth-flow
+    attrs:
+      designation: authentication
+      name: Accedi a IEEE STB1019
+      title: Accedi a IEEE STB1019
+      layout: sidebar_left
+      compatibility_mode: true
+  
+#STAGES=========================================================================
+  - id: stage-identification
+    model: authentik_stages_identification.identificationstage
+    identifiers:
+      name: stage-identification
+    attrs:
+      user_fields:
+        - email
+        - username
+      sources:
+        - !Find [authentik_sources_oauth.oauthsource, [slug, github-oauth]]
+      
+  - id: stage-mfa-validation
+    model: authentik_stages_authenticator_validate.authenticatorvalidatestage
+    identifiers:
+      name: stage-mfa-validation
+
+  - id: stage-auth-login
+    model: authentik_stages_user_login.userloginstage
+    attrs:
+      session_duration: seconds=0
+    identifiers:
+      name: stage-auth-login
+
+#POLICIES=========================================================================
+  - id: policy-no-webauthn-nor-duo
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: policy-no-webauthn-nor-duo
+    attrs:
+      expression: |
+        from authentik.stages.authenticator_webauthn.models import WebAuthnDevice
+        from authentik.stages.authenticator_duo.models import DuoDevice
+
+        has_duo = DuoDevice.objects.filter(user=request.context['pending_user'], confirmed=True).exists()
+        has_webauthn = WebAuthnDevice.objects.filter(user=request.context['pending_user'], confirmed=True).exists()
+
+        return not has_duo and not has_webauthn
+
+#BINDINGS=========================================================================
+
+  - id: binding-stage-identification
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 10
+      stage: !KeyOf stage-identification
+      target: !KeyOf flow
+
+  - id: binding-stage-auth-password
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 20
+      stage: !Find [authentik_stages_password.passwordstage, [name, stage-auth-password]] #From 100
+      target: !KeyOf flow
+    attrs:
+      evaluate_on_plan: false
+      re_evaluate_policies: true
+      policy_engine_mode: all
+  
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 100
+      policy: !KeyOf policy-no-webauthn-nor-duo
+      target: !KeyOf binding-stage-auth-password
+
+  - id: binding-stage-mfa-validation
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 30
+      stage: !KeyOf stage-mfa-validation
+      target: !KeyOf flow
+
+  - id: binding-stage-auth-login
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 40
+      stage: !KeyOf stage-auth-login
+      target: !KeyOf flow
+  
