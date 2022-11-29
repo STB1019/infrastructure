@@ -37,3 +37,7 @@ variable "use_http3"{
   type = bool
   default = false
 }
+
+variable "http3_port"{
+  type = number
+}

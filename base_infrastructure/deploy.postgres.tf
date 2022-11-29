@@ -12,7 +12,7 @@ module postgres_deploy{
   client_backend = module.pg_ca.client_role
   machine_ip = var.machine_ip
   user = var.user
-  depends_on = [module.vault_deploy]
+  depends_on = [module.pg_ca]
 }
 
 resource "dns_cname_record" "pg_dns" {

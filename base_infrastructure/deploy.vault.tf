@@ -19,6 +19,8 @@ module vault_ingress{
   machine_ip = var.machine_ip
   srv_name = "${var.vault_host}.${var.subdomain}${var.domain}"
   reverse_proxy_address = "http://${module.vault_deploy.container_name}:8200"
+  use_http3 = true
+  http3_port = 402
 
   depends_on = [module.vault_deploy]
 }

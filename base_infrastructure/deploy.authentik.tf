@@ -25,6 +25,8 @@ module authentik_ingress{
   machine_ip = var.machine_ip
   srv_name = "${var.authentik_host}.${var.subdomain}${var.domain}"
   reverse_proxy_address = "http://${module.authentik_deploy.container.server}:9000"
+  use_http3 = true
+  http3_port = 403
 
   depends_on = [module.vault_deploy, module.authentik_deploy]
 }

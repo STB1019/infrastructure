@@ -22,7 +22,7 @@ resource docker_container nginx {
   }
 
   healthcheck{
-    test          = ["CMD", "wget", "http://127.0.0.1:8081", "-O", "-"]
+    test          = ["CMD", "curl", "http://127.0.0.1:8081"]
     interval      = "30s"
     retries       = 3
     start_period  = "10s"
@@ -41,10 +41,13 @@ resource docker_container nginx {
     protocol = "tcp"
   }
 
-  ports {
-    internal = 443
-    external = 443
-    protocol = "udp"
+  dynamic "ports" {
+    for_each = range(400, 410, 1)
+    content {
+      internal = ports.value
+      external = ports.value
+      protocol = "udp"
+    }
   }
 
   ports {

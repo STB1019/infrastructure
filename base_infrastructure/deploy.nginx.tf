@@ -7,7 +7,8 @@ module "nginx_deploy" {
   http_backend = module.http_ca.backend
   server_backend = module.http_ca.server_role
   machine_ip = var.machine_ip
-  depends_on = [module.vault_deploy]
+  depends_on = [module.http_ca]
+  use_http3 = true
 }
 
 resource "dns_cname_record" "host_dns" {

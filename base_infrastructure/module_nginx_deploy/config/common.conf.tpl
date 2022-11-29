@@ -27,6 +27,7 @@ access_log /dev/stderr;
 
 server {
     listen 8080 default_server;
+    access_log /dev/null;
 
     location /stub_status {
         stub_status;
@@ -37,6 +38,7 @@ server {
 
 server {
     listen 8081 default_server;
+    access_log /dev/null;
 
     location / {
         return 200 'ok';
@@ -53,8 +55,9 @@ server {
 
 server {
     listen 443 ssl http2 default_server;
-    add_header Strict-Transport-Security max-age=15768000; # Optional but good, client should always try to use HTTPS, even for initial requests.
     proxy_request_buffering off;
+
+    server_name *.${domain}
 
     ssl_certificate /etc/${default_ssl_certificate};
     ssl_certificate_key /etc/${default_ssl_key};

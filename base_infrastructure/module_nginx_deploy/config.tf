@@ -41,7 +41,8 @@ resource local_file nginx_inc_ssl{
 resource local_file nginx_conf{
   content         = templatefile("${path.module}/config${var.use_http3 ? "3" : ""}/common.conf.tpl", {
     default_ssl_certificate = "ssl/default/server.crt",
-    default_ssl_key         = "ssl/default/server.key"
+    default_ssl_key         = "ssl/default/server.key",
+    domain                  = var.domain,
   })
   filename        = "${var.conf_dir}/nginx/config.conf"
   file_permission = 0644
