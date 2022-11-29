@@ -1,0 +1,29 @@
+version: 1
+metadata:
+  name: flow_invalidate
+  label:
+    author: Stefano Fontana
+    date: nov 2022
+entries:
+  - id: flow
+    model: authentik_flows.flow
+    attrs:
+      designation: invalidation
+      title: Logout
+      name: Logout
+      layout: stacked
+      compatibility_mode: true
+    identifiers:
+      slug: ieeesb-logout
+
+  - id: stage-invalidation-logout
+    model: authentik_stages_user_logout.userlogoutstage
+    identifiers:
+      name: stage-invalidation-logout
+
+  - model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 0
+      stage: !KeyOf stage-invalidation-logout
+      target: !KeyOf flow
+    

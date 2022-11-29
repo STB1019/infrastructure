@@ -1,0 +1,62 @@
+version: 1
+metadata:
+  name: flow_user_settings
+  label:
+    author: Stefano Fontana
+    date: nov 2022
+entries:
+  - id: flow
+    model: authentik_flows.flow
+    attrs:
+      designation: stage_configuration
+      name: Gestisci i tuoi dati
+      title: Gestisci i tuoi dati
+      compatibility_mode: true
+    identifiers:
+      slug: ieeesb-user-settings
+
+  - id: stage-user-settings-write
+    model: authentik_stages_user_write.userwritestage
+    identifiers:
+      name: stage-user-settings-write
+
+#BINDINGS=========================================================================
+  
+  - id: binding-stage-prompt-personal-info
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 1
+      stage: !Find [authentik_stages_prompt.promptstage, [name, stage-prompt-personal-info]]
+      target: !KeyOf flow
+
+  - id: binding-stage-prompt-unibs
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 4
+      stage: !Find [authentik_stages_prompt.promptstage, [name, stage-prompt-unibs]]
+      target: !KeyOf flow
+
+  - id: binding-stage-prompt-ieee
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 5
+      stage: !Find [authentik_stages_prompt.promptstage, [name, stage-prompt-ieee]]
+      target: !KeyOf flow
+  
+  - id: binding-stage-user-settings-write
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      order: 6
+      stage: !KeyOf stage-user-settings-write
+      target: !KeyOf flow
+    attrs:
+      evaluate_on_plan: false
+      re_evaluate_policies: true
+      policy_engine_mode: all
+  
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 100
+      policy: !Find [authentik_policies_expression.expressionpolicy,[name, action-store-flow-attributes]] #From 100
+      target: !KeyOf binding-stage-user-settings-write
+  
