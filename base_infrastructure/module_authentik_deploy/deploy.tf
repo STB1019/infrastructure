@@ -40,7 +40,7 @@ module wait_redis{
 
 
 resource docker_container authentik {
-  name      = "authentik_server"
+  name      = "authentik-server"
   image     = docker_image.authentik.image_id
 
   depends_on = [
@@ -118,7 +118,7 @@ module wait_authentik {
 }
 
 resource docker_container authentik_worker {
-  name      = "authentik_worker"
+  name      = "authentik-worker"
   image     = docker_image.authentik.image_id
 
   depends_on = [

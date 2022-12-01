@@ -31,6 +31,14 @@ module authentik_ingress{
   depends_on = [module.vault_deploy, module.authentik_deploy]
 }
 
+module "authentik_provision"{
+  source = "./module_authentik_provision"
+
+  depends_on = [
+    module.authentik_deploy
+  ]
+}
+
 resource "dns_cname_record" "authentik_dns" {
   zone  = "${var.subdomain}${var.domain}."
   name  = var.authentik_host

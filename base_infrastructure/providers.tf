@@ -8,6 +8,10 @@ terraform {
       source = "cyrilgdn/postgresql"
       version = "1.17.1"
     }
+    authentik = {
+      source = "goauthentik/authentik"
+      version = "2022.10.0"
+    }
   }
 }
 
@@ -40,4 +44,9 @@ provider "postgresql" {
     key  = module.postgres_deploy.provision.key_file
   }
   sslrootcert = module.postgres_deploy.provision.ca_file
+}
+
+provider authentik {
+  url   = "http://${module.authentik_deploy.container.server}:9000"
+  token = module.authentik_deploy.access.token
 }

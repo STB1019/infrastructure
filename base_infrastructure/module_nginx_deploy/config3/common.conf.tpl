@@ -18,11 +18,12 @@ ssl_buffer_size 4k; # This is for performance rather than security, the optimal 
                                 # 16k default, 4k is a good first guess and likely more performant.
 
 ssl_stapling_verify on;
-resolver 1.1.1.1 1.0.0.1 valid=300s;
 resolver_timeout 5s;
 
 error_log /dev/stderr warn;
 access_log /dev/stderr;
+
+resolver 127.0.0.11;
 
 gzip off; #https://en.wikipedia.org/wiki/BREACH
 

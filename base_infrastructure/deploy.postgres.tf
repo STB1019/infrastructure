@@ -19,4 +19,8 @@ resource "dns_cname_record" "pg_dns" {
   zone  = "${var.subdomain}${var.domain}."
   name  = var.pg_host
   cname = "${var.domain}."
+  depends_on = [
+    
+    module.bind_deploy
+  ]
 }

@@ -13,16 +13,20 @@ module "http_ca" {
   allowed_domains = [
     "${var.subdomain}${var.domain}", 
     "${var.app_subdomain}${var.domain}", 
+    "${var.domain}", 
     "localhost", 
     var.machine_ip
   ]
   allowed_uri_sans = [
     "*.${var.subdomain}${var.domain}", 
+    "*.${var.domain}", 
     "*.${var.subdomain}${var.domain}:*", 
+    "*.${var.domain}:*", 
     "${var.subdomain}${var.domain}:*",
     "*.${var.app_subdomain}${var.domain}", 
     "*.${var.app_subdomain}${var.domain}:*", 
     "${var.app_subdomain}${var.domain}:*", 
+    "${var.domain}:*", 
     "localhost:*", 
     "${var.machine_ip}:*"
   ]

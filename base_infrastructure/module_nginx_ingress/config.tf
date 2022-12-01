@@ -26,6 +26,7 @@ resource local_file nginx_conf{
     reverse_proxy_address = var.reverse_proxy_address,
     additional_configs = var.additional_configs
     port            = var.http3_port
+    varname         = replace(var.srv_name, ".", "_")
   })
   filename        = "${var.conf_dir}/nginx/${var.srv_name}.conf"
   file_permission = 0644

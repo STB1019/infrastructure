@@ -29,4 +29,8 @@ resource "dns_cname_record" "vault_dns" {
   zone  = "${var.subdomain}${var.domain}."
   name  = var.vault_host
   cname = "${var.domain}."
+  depends_on = [
+    
+    module.bind_deploy
+  ]
 }

@@ -1,3 +1,4 @@
+
 server {
     listen ${port} http3 reuseport;
     listen [::]:${port} http3 reuseport;
@@ -11,9 +12,10 @@ server {
     
     ssl_certificate /etc/${ssl_certificate};
     ssl_certificate_key /etc/${ssl_key};
+    set $url_${varname} "${reverse_proxy_address}";
 
     location / {
-        proxy_pass ${reverse_proxy_address};
+        proxy_pass $url_${varname};
         proxy_hide_header X-Frame-Options;
         include conf.d/includes/reverse_proxy.conf;
         ${additional_configs}

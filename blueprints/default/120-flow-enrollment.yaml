@@ -6,18 +6,18 @@ metadata:
     date: nov 2022
 entries:
 
-#  - model: authentik_blueprints.metaapplyblueprint
-#    attrs:
-#      identifiers:
-#        name: flow_password_change
-#      required: false
-#  
-#  - model: authentik_blueprints.metaapplyblueprint
-#    attrs:
-#      identifiers:
-#        name: flow_gh_sso_auth
-#      required: false
-#
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_password_change
+      required: false
+  
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_gh_sso_auth
+      required: false
+
   - id: flow
     model: authentik_flows.flow
     attrs:

@@ -5,11 +5,31 @@ metadata:
     author: Stefano Fontana
     date: nov 2022
 entries:
+
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_authentication
+      required: false
+  
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_invalidate
+      required: false
+
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_user_settings
+      required: false
+
   - model: authentik_tenants.tenant
     attrs:
       flow_authentication: !Find [authentik_flows.flow, [slug, ieeesb-auth-flow]]
       flow_invalidation: !Find [authentik_flows.flow, [slug, ieeesb-logout]]
       flow_user_settings: !Find [authentik_flows.flow, [slug, ieeesb-user-settings]]
+
     identifiers:
       domain: sso.sb.ieee.elux.ing.unibs.it
       default: True

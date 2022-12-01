@@ -3,7 +3,7 @@ output bundle {
 }
 
 output certificate {
-  value       = "${vault_pki_secret_backend_root_sign_intermediate.pki.certificate}"
+  value       = "${vault_pki_secret_backend_intermediate_set_signed.pki.certificate}"
 }
 
 output backend {

@@ -6,17 +6,17 @@ metadata:
     date: nov 2022
 entries:
 
-#  - model: authentik_blueprints.metaapplyblueprint
-#    attrs:
-#      identifiers:
-#        name: flow_gh_sso_auth
-#      required: false
-#  
-#  - model: authentik_blueprints.metaapplyblueprint
-#    attrs:
-#      identifiers:
-#        name: flow_enrollment
-#      required: false
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_gh_sso_auth
+      required: false
+  
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: flow_enrollment
+      required: false
 
   - id: github-oauth
     model: authentik_sources_oauth.oauthsource
