@@ -22,9 +22,6 @@ cluster-domain: ${cluster_domain}
 
 secrets-encryption: true
 
-disable:
-  - traefik
-
 kube-apiserver-arg: 
   - "oidc-username-claim=${oidc_userid_scope}"
   - "oidc-groups-claim=${oidc_kube_scope}"

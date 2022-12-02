@@ -1,7 +1,7 @@
 resource docker_container nginx {
   name      = "nginx"
   hostname  = "nginx"
-  image     = var.use_http3 ? docker_image.nginx_http3[0].image_id : docker_image.nginx[0].image_id
+  image     = docker_image.nginx.image_id
 
   restart   = "unless-stopped"
 
@@ -16,11 +16,6 @@ resource docker_container nginx {
     host_path       = "${var.data_dir}/nginx/ssl"
   }
 
-  volumes{
-    container_path  = "/var/www/static"
-    host_path       = dirname(local_file.static_dir.filename)
-  }
-
   healthcheck{
     test          = ["CMD", "curl", "http://127.0.0.1:8081"]
     interval      = "30s"
@@ -30,24 +25,15 @@ resource docker_container nginx {
   }
 
   ports {
-    internal = 80
-    external = 80
+    internal = 4443
+    external = 4443
     protocol = "tcp"
   }
 
   ports {
-    internal = 443
-    external = 443
+    internal = 8200
+    external = 8200
     protocol = "tcp"
-  }
-
-  dynamic "ports" {
-    for_each = range(400, 410, 1)
-    content {
-      internal = ports.value
-      external = ports.value
-      protocol = "udp"
-    }
   }
 
   ports {

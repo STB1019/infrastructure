@@ -45,24 +45,50 @@ server {
     }
 }
 
+# Upgrade WebSocket if requested, otherwise use keepalive
+map $http_upgrade $connection_upgrade_keepalive {
+    default upgrade;
+    ''      '';
+}
+
+
 server {
-    listen 80 default_server;
+    listen 4443 ssl http2;
+    proxy_request_buffering off;
+
+    ssl_certificate /etc/${sso_ssl_certificate};
+    ssl_certificate_key /etc/${sso_ssl_key};
+    set $url_sso "https://authentik-server:4443";
 
     location / {
-        return 301 https://$host$request_uri;
+        proxy_pass $url_sso;
+
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Host $http_host;
+        proxy_set_header Connection $connection_upgrade_keepalive;
+        proxy_ssl_verify off;
     }
 }
 
 server {
-    listen 443 ssl http2 default_server;
+    listen 8200 ssl http2;
     proxy_request_buffering off;
 
-    server_name *.${domain}
-
-    ssl_certificate /etc/${default_ssl_certificate};
-    ssl_certificate_key /etc/${default_ssl_key};
+    ssl_certificate /etc/${vlt_ssl_certificate};
+    ssl_certificate_key /etc/${vlt_ssl_key};
+    set $url_vlt "http://vault:8200";
 
     location / {
-        return 418;
+        proxy_pass $url_vlt;
+        proxy_hide_header X-Frame-Options;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
     }
 }

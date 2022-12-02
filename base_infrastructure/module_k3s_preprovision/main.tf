@@ -85,7 +85,6 @@ resource "authentik_provider_oauth2" "kube-provider" {
     data.authentik_scope_mapping.email.id,
     data.authentik_scope_mapping.groups.id,
   ]
-  
 }
 
 resource "authentik_application" "kube" {
@@ -123,7 +122,7 @@ resource "local_file" "install_config" {
     oidc_userid_scope = "email",
     oidc_kube_scope = "groups",
     oidc_ca_file = local_file.k3s_oidc_ca.filename,
-    oidc_issue_url = "https://${var.sso_domain}/application/o/${authentik_application.kube.slug}/",
+    oidc_issue_url = "https://127.0.0.1:4443/application/o/${authentik_application.kube.slug}/",
     oidc_client_id = authentik_provider_oauth2.kube-provider.client_id,
   })
   filename = "${var.conf_dir}/k3s/install.yaml"

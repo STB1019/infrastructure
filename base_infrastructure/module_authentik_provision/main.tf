@@ -36,3 +36,16 @@ resource "authentik_group" "executive" {
   parent       = authentik_group.member.id
 }
 
+resource vault_pki_secret_backend_cert authentik_web_crt {
+  backend = var.http_backend
+  name = var.client_backend
+
+  common_name = "ssolocal.${var.domain}"
+  ip_sans = ["127.0.0.1"]
+}
+
+resource authentik_certificate_key_pair web {
+  name             = "web"
+  certificate_data = "${vault_pki_secret_backend_cert.authentik_web_crt.certificate}\n${vault_pki_secret_backend_cert.authentik_web_crt.ca_chain}"
+  key_data         = vault_pki_secret_backend_cert.authentik_web_crt.private_key
+}

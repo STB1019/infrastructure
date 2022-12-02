@@ -38,7 +38,6 @@ module wait_redis{
     ]
 }
 
-
 resource docker_container authentik {
   name      = "authentik-server"
   image     = docker_image.authentik.image_id
@@ -77,7 +76,6 @@ resource docker_container authentik {
     host_path       = "${abspath(var.blueprints_dir)}/system"
   }
 
-
   command = ["server"]
 
   networks_advanced{
@@ -101,6 +99,8 @@ resource docker_container authentik {
     "AUTHENTIK_DEFAULT_TOKEN_LENGTH=128",
     "AUTHENTIK_BOOTSTRAP_PASSWORD=${random_password.akadmin_password.result}",
     "AUTHENTIK_BOOTSTRAP_TOKEN=${random_password.authentik_token.result}",
+
+    "AUTHENTIK_LISTEN__HTTPS=0.0.0.0:4443"
   ]
 
   log_driver = "json-file"
@@ -175,7 +175,6 @@ resource docker_container authentik_worker {
     name = var.network_name
   }
 
-
   env = [
     "AUTHENTIK_REDIS__HOST=${docker_container.redis.name}",
     "AUTHENTIK_POSTGRESQL__HOST=${var.postgres_host}",
@@ -189,6 +188,8 @@ resource docker_container authentik_worker {
     "AUTHENTIK_DEFAULT_TOKEN_LENGTH=128",
     "AUTHENTIK_BOOTSTRAP_PASSWORD=${random_password.akadmin_password.result}",
     "AUTHENTIK_BOOTSTRAP_TOKEN=${random_password.authentik_token.result}",
+
+    "AUTHENTIK_LISTEN__HTTPS=0.0.0.0:4443"
   ]
 
   log_driver = "json-file"

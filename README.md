@@ -22,3 +22,13 @@ docker build -f terraform.dockerfile -t tetofonta/terraform:latest config
 docker kill --signal=SIGHUP nginx
 cat base_infrastructure/terraform.tfstate | jq -r '.resources[] | select( .name == "akadmin_password" ) | .instances[0].attributes.result'
 ```
+
+set dns to local#53
+install helm, kubectl
+run k3s
+
+```
+helm repo add traefik https://traefik.github.io/charts
+helm repo update
+
+```

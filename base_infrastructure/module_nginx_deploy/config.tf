@@ -1,55 +1,58 @@
-resource vault_pki_secret_backend_cert web_crt {
+resource vault_pki_secret_backend_cert authentik_crt {
   backend = var.http_backend
   name = var.server_backend
-  common_name = "*.${var.domain}"
+  common_name = "${var.authentik_host}.${var.domain}"
   ip_sans = ["127.0.0.1", var.machine_ip]
   auto_renew = true
 }
 
-resource local_file nginx_cert{
-  content         = vault_pki_secret_backend_cert.web_crt.certificate
-  filename        = "${var.data_dir}/nginx/ssl/default/server.crt"
+resource vault_pki_secret_backend_cert vault_crt {
+  backend = var.http_backend
+  name = var.server_backend
+  common_name = "${var.vault_host}.${var.domain}"
+  ip_sans = ["127.0.0.1", var.machine_ip]
+  auto_renew = true
+}
+
+
+resource local_file nginx_sso_cert{
+  content         = vault_pki_secret_backend_cert.authentik_crt.certificate
+  filename        = "${var.data_dir}/nginx/ssl/sso/server.crt"
   file_permission = 0644
 }
 
-resource local_sensitive_file nginx_key{
-  content         = vault_pki_secret_backend_cert.web_crt.private_key
-  filename        = "${var.data_dir}/nginx/ssl/default/server.key"
+resource local_sensitive_file nginx_sso_key{
+  content         = vault_pki_secret_backend_cert.authentik_crt.private_key
+  filename        = "${var.data_dir}/nginx/ssl/sso/server.key"
   file_permission = 0640
 }
 
-resource local_file static_dir{
-  content         = ""
-  filename        = "${var.data_dir}/nginx/static/.keep"
+resource local_file nginx_vlt_cert{
+  content         = vault_pki_secret_backend_cert.vault_crt.certificate
+  filename        = "${var.data_dir}/nginx/ssl/vlt/server.crt"
+  file_permission = 0644
+}
+
+resource local_sensitive_file nginx_vlt_key{
+  content         = vault_pki_secret_backend_cert.vault_crt.private_key
+  filename        = "${var.data_dir}/nginx/ssl/vlt/server.key"
   file_permission = 0640
 }
-
-resource local_file nginx_inc_rp{
-  content         = file("${path.module}/config${var.use_http3 ? "3" : ""}/includes/reverse_proxy.conf")
-  filename        = "${var.conf_dir}/nginx/includes/reverse_proxy.conf"
-  file_permission = 0644
-}
-
-
-resource local_file nginx_inc_ssl{
-  content         = file("${path.module}/config${var.use_http3 ? "3" : ""}/includes/ssl_upstream.conf")
-  filename        = "${var.conf_dir}/nginx/includes/ssl_upstream.conf"
-  file_permission = 0644
-}
-
 
 resource local_file nginx_conf{
-  content         = templatefile("${path.module}/config${var.use_http3 ? "3" : ""}/common.conf.tpl", {
-    default_ssl_certificate = "ssl/default/server.crt",
-    default_ssl_key         = "ssl/default/server.key",
+  content         = templatefile("${path.module}/config/common.conf.tpl", {
+    sso_ssl_certificate = "ssl/sso/server.crt",
+    sso_ssl_key         = "ssl/sso/server.key",
+    vlt_ssl_certificate = "ssl/vlt/server.crt",
+    vlt_ssl_key         = "ssl/vlt/server.key",
     domain                  = var.domain,
   })
   filename        = "${var.conf_dir}/nginx/config.conf"
   file_permission = 0644
   depends_on = [
-    local_file.nginx_cert,
-    local_sensitive_file.nginx_key,
-    local_file.nginx_inc_rp,
-    local_file.nginx_inc_ssl
+    local_file.nginx_sso_cert,
+    local_sensitive_file.nginx_sso_key,
+    local_file.nginx_vlt_cert,
+    local_sensitive_file.nginx_vlt_key
   ]
 }

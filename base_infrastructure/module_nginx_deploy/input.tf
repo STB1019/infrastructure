@@ -16,6 +16,15 @@ variable "server_backend" {
 variable "domain" {
   type = string
 }
+
+variable "authentik_host" {
+  type = string
+}
+
+variable "vault_host" {
+  type = string
+}
+
 variable "machine_ip" {
   type = string
 }

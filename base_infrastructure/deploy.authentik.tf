@@ -15,24 +15,11 @@ module authentik_deploy{
     ]
 }
 
-module authentik_ingress{
-  source        = "./module_nginx_ingress"
-  data_dir      = var.data_dir
-  conf_dir      = var.conf_dir
-  network_name = var.network_name
-  http_backend = module.http_ca.backend
-  server_backend = module.http_ca.server_role
-  machine_ip = var.machine_ip
-  srv_name = "${var.authentik_host}.${var.subdomain}${var.domain}"
-  reverse_proxy_address = "http://${module.authentik_deploy.container.server}:9000"
-  use_http3 = true
-  http3_port = 403
-
-  depends_on = [module.vault_deploy, module.authentik_deploy]
-}
-
 module "authentik_provision"{
   source = "./module_authentik_provision"
+  http_backend = module.http_ca.backend
+  client_backend = module.http_ca.server_role
+  domain = "${var.subdomain}${var.domain}"
 
   depends_on = [
     module.authentik_deploy
