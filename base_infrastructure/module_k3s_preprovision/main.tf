@@ -61,10 +61,31 @@ data "authentik_flow" "authorization-flow" {
   slug = "provider-authorization-explicit"
 }
 
+data "authentik_scope_mapping" "email" {
+  scope_name = "email"
+}
+
+data "authentik_scope_mapping" "groups" {
+  scope_name = "groups"
+}
+
+data "authentik_scope_mapping" "openid" {
+  scope_name = "openid"
+}
+
 resource "authentik_provider_oauth2" "kube-provider" {
   name      = "kube-provider"
   client_id = "kube"
   authorization_flow = data.authentik_flow.authorization-flow.id
+  client_type = "public"
+  signing_key = authentik_certificate_key_pair.kube.id
+  redirect_uris = [".*"]
+  property_mappings = [
+    data.authentik_scope_mapping.openid.id,
+    data.authentik_scope_mapping.email.id,
+    data.authentik_scope_mapping.groups.id,
+  ]
+  
 }
 
 resource "authentik_application" "kube" {
@@ -74,7 +95,6 @@ resource "authentik_application" "kube" {
   policy_engine_mode = "all"
   protocol_provider = authentik_provider_oauth2.kube-provider.id
 }
-
 
 data "authentik_group" "member" {
   name = "member"

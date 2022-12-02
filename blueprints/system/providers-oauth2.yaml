@@ -1,48 +1,79 @@
 version: 1
 metadata:
-  labels:
-    blueprints.goauthentik.io/system: "true"
-  name: System - OAuth2 Provider - Scopes
+  label:
+    author: Stefano Fontana
+    date: nov 2022
+  name: oauth_scopes
 entries:
   - identifiers:
-      managed: goauthentik.io/providers/oauth2/scope-openid
+      name: scope-openid
     model: authentik_providers_oauth2.scopemapping
     attrs:
-      name: "authentik default OAuth Mapping: OpenID 'openid'"
       scope_name: openid
       expression: |
-        # This scope is required by the OpenID-spec, and must as such exist in authentik.
-        # The scope by itself does not grant any information
         return {}
+
   - identifiers:
-      managed: goauthentik.io/providers/oauth2/scope-email
+      name: scope-email
     model: authentik_providers_oauth2.scopemapping
     attrs:
-      name: "authentik default OAuth Mapping: OpenID 'email'"
       scope_name: email
       description: "Email address"
       expression: |
         return {
-            "email": request.user.email,
-            "email_verified": True
+            "email": request.user.attributes["email"]
         }
+
   - identifiers:
-      managed: goauthentik.io/providers/oauth2/scope-profile
+      name: scope-unibs
     model: authentik_providers_oauth2.scopemapping
     attrs:
-      name: "authentik default OAuth Mapping: OpenID 'profile'"
+      scope_name: unibs
+      description: "Unibs data"
+      expression: |
+        return {
+            "unibs": {
+              "email": request.user.attributes["email"],
+              "code": request.user.attributes["unibs_code"]
+            }
+        }
+  
+  - identifiers:
+      name: scope-ieee
+    model: authentik_providers_oauth2.scopemapping
+    attrs:
+      scope_name: unibs
+      description: "Unibs data"
+      expression: |
+        return {
+            "ieee": {
+              "email": request.user.attributes["ieee_email"],
+              "code": request.user.attributes["ieee_code"]
+            }
+        }
+
+  - identifiers:
+      name: scope-profile
+    model: authentik_providers_oauth2.scopemapping
+    attrs:
       scope_name: profile
       description: "General Profile Information"
       expression: |
         return {
-            # Because authentik only saves the user's full name, and has no concept of first and last names,
-            # the full name is used as given name.
-            # You can override this behaviour in custom mappings, i.e. `request.user.name.split(" ")`
             "name": request.user.name,
             "given_name": request.user.name,
             "family_name": "",
             "preferred_username": request.user.username,
             "nickname": request.user.username,
-            # groups is not part of the official userinfo schema, but is a quasi-standard
-            "groups": [group.name for group in request.user.ak_groups.all()],
+        }
+
+  - identifiers:
+      name: scope-groups
+    model: authentik_providers_oauth2.scopemapping
+    attrs:
+      scope_name: groups
+      description: "groups data"
+      expression: |
+        return {
+          "groups": [group.name for group in request.user.ak_groups.all()],
         }
