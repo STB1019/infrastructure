@@ -1,0 +1,76 @@
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-vlt
+  
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vlt-sb-ieee-elux-ing-unibs-it
+  namespace: external-vlt
+spec:
+  secretName: vlt-sb-ieee-elux-ing-unibs-it--tls
+  secretTemplate:
+    labels:
+      domain: "vlt.sb.ieee.elux.ing.unibs.it"
+  duration: 720h # 30 days
+  renewBefore: 360h # 15d
+  privateKey:
+    algorithm: ECDSA
+    encoding: PKCS1
+    size: 521
+  commonName: vlt.sb.ieee.elux.ing.unibs.it
+  isCA: false
+  usages:
+    - server auth
+  dnsNames:
+    - vlt.sb.ieee.elux.ing.unibs.it
+    - localhost
+  ipAddresses:
+    - 192.168.1.174
+    - 127.0.0.1
+  issuerRef:
+    name: http-issuer
+    kind: ClusterIssuer
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: vlt-proxy
+  namespace: external-vlt
+spec:
+  type: ExternalName
+  externalName: 192.168.1.174
+  ports:
+    - name: https
+      port: 8200
+      targetPort: 8200
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: vlt-proxy-ingressroute
+  namespace: external-vlt
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`vlt.sb.ieee.elux.ing.unibs.it`)
+      kind: Rule
+      middlewares:
+        - name: secure-redirect
+          namespace: default
+      services:
+        - name: vlt-proxy
+          port: https
+          scheme: https
+  tls:
+    secretName: vlt-sb-ieee-elux-ing-unibs-it--tls

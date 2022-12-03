@@ -1,0 +1,80 @@
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: httpdashboard-sb-ieee-elux-ing-unibs-it
+  namespace: kube-system
+spec:
+  secretName: httpdashboard-sb-ieee-elux-ing-unibs-it--tls
+  secretTemplate:
+    labels:
+      domain: "httpdashboard.sb.ieee.elux.ing.unibs.it"
+  duration: 720h # 30 days
+  renewBefore: 360h # 15d
+  privateKey:
+    algorithm: ECDSA
+    encoding: PKCS1
+    size: 521
+  commonName: httpdashboard.sb.ieee.elux.ing.unibs.it
+  isCA: false
+  usages:
+    - server auth
+  dnsNames:
+    - httpdashboard.sb.ieee.elux.ing.unibs.it
+    - localhost
+  ipAddresses:
+    - 192.168.1.174
+    - 127.0.0.1
+  issuerRef:
+    name: http-issuer
+    kind: ClusterIssuer
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sso-proxy
+  namespace: kube-system
+spec:
+  type: ExternalName
+  externalName: 192.168.1.174
+  ports:
+    - name: https
+      port: 4443
+      targetPort: 4443
+
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: httpdashboard-proxy-ingressroute
+  namespace: kube-system
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`httpdashboard.sb.ieee.elux.ing.unibs.it`)
+      priority: 15
+      middlewares:
+        - name: secure-redirect
+          namespace: default
+        - name: authentik
+          namespace: default
+      services:
+        - name: httpdashboard-proxy
+          port: 9000
+    - kind: Rule
+      match: "Host(`httpdashboard.sb.ieee.elux.ing.unibs.it`) && PathPrefix(`/outpost.goauthentik.io/`)"
+      priority: 10
+      services:
+          - name: sso-proxy
+            namespace: external-sso
+            port: https
+            scheme: https
+  tls:
+    secretName: httpdashboard-sb-ieee-elux-ing-unibs-it--tls

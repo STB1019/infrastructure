@@ -64,6 +64,11 @@ variable "pg_host"{
     type        = string
 }
 
+variable "traeffik_dashboard_dns"{
+    description = "The hostname of the traeffik_dashboard_dns server"
+    type        = string
+}
+
 variable "authentik_host"{
     description = "The hostname of the sso server"
     type        = string

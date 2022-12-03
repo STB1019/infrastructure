@@ -42,3 +42,7 @@ variable "http_ca_pem"{
 variable "sso_domain"{
     type = string
 }
+
+variable "dashboard_domain"{
+    type = string
+}

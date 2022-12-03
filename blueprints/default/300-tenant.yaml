@@ -29,7 +29,9 @@ entries:
       flow_authentication: !Find [authentik_flows.flow, [slug, ieeesb-auth-flow]]
       flow_invalidation: !Find [authentik_flows.flow, [slug, ieeesb-logout]]
       flow_user_settings: !Find [authentik_flows.flow, [slug, ieeesb-user-settings]]
-
+      branding_logo: "/media/aside_logo.png"
+      branding_favicon: "/media/icon.png"
+      branding_title: "IEEE STB1019 Auth Manager"
     identifiers:
       domain: sso.sb.ieee.elux.ing.unibs.it
       default: True

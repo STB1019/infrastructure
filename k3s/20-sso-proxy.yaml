@@ -1,0 +1,79 @@
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-sso
+
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: sso-sb-ieee-elux-ing-unibs-it
+  namespace: external-sso
+spec:
+  secretName: sso-sb-ieee-elux-ing-unibs-it--tls
+  secretTemplate:
+    labels:
+      domain: "sso.sb.ieee.elux.ing.unibs.it"
+  duration: 720h # 30 days
+  renewBefore: 360h # 15d
+  privateKey:
+    algorithm: ECDSA
+    encoding: PKCS1
+    size: 521
+  commonName: sso.sb.ieee.elux.ing.unibs.it
+  isCA: false
+  usages:
+    - server auth
+  dnsNames:
+    - sso.sb.ieee.elux.ing.unibs.it
+    - localhost
+  ipAddresses:
+    - 192.168.1.174
+    - 127.0.0.1
+  issuerRef:
+    name: http-issuer
+    kind: ClusterIssuer
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sso-proxy
+  namespace: external-sso
+spec:
+  type: ExternalName
+  externalName: 192.168.1.174
+  ports:
+    - name: https
+      port: 4443
+      targetPort: 4443
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sso-proxy-ingressroute
+  namespace: external-sso
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`sso.sb.ieee.elux.ing.unibs.it`)
+      kind: Rule
+      middlewares:
+        - name: secure-redirect
+          namespace: default
+      services:
+        - name: sso-proxy
+          port: https
+          scheme: https
+  tls:
+    secretName: sso-sb-ieee-elux-ing-unibs-it--tls
+
+---
+

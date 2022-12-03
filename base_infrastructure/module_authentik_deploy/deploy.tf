@@ -199,3 +199,9 @@ resource docker_container authentik_worker {
     "max-size" = "256m"
    }
 }
+
+module wait_authentik_worker {
+    source          = "../module_docker_wait"
+    container_name  = docker_container.authentik_worker.name
+    depends_on      = [docker_container.authentik_worker]
+}

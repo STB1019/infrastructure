@@ -61,6 +61,10 @@ data "authentik_flow" "authorization-flow" {
   slug = "provider-authorization-explicit"
 }
 
+data "authentik_flow" "authorization-flow-implicit" {
+  slug = "provider-authorization-implicit"
+}
+
 data "authentik_scope_mapping" "email" {
   scope_name = "email"
 }
@@ -99,6 +103,10 @@ data "authentik_group" "member" {
   name = "member"
 }
 
+data "authentik_group" "executive" {
+  name = "executive"
+}
+
 resource "authentik_policy_binding" "kube-access" {
   target = authentik_application.kube.uuid
   group = data.authentik_group.member.id
@@ -128,3 +136,31 @@ resource "local_file" "install_config" {
   filename = "${var.conf_dir}/k3s/install.yaml"
   file_permission = 644
 }
+
+resource "authentik_provider_proxy" "dashboard" {
+  name               = "traefik-dashboard"
+  authorization_flow = data.authentik_flow.authorization-flow-implicit.id
+  mode = "forward_single"
+  external_host = "https://${var.dashboard_domain}/"
+  property_mappings = [
+    data.authentik_scope_mapping.openid.id,
+    data.authentik_scope_mapping.email.id
+  ] 
+}
+
+resource "authentik_application" "dashboard" {
+  name              = "traefik-dashboard"
+  slug              = "traefik-dashboard"
+  protocol_provider = authentik_provider_proxy.dashboard.id
+  group = "Amministrazione"
+  meta_launch_url = "https://${var.dashboard_domain}/dashboard/"
+  open_in_new_tab = true
+  policy_engine_mode = "all"
+}
+
+resource "authentik_policy_binding" "dashboard-app-access" {
+  target = authentik_application.dashboard.uuid
+  group  = data.authentik_group.executive.id
+  order  = 0
+}
+

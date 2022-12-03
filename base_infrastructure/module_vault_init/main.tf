@@ -7,3 +7,4 @@ data "external" "init_vault" {
     var.vault_key_threshold,
   ]
 }
+
