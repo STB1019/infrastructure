@@ -46,7 +46,6 @@ resource local_file postgres_passwd{
   file_permission = 0644
 }
 
-
 resource local_file postgres_data_dir{
   content         = ""
   filename        = "${var.data_dir}/pg/.keep"

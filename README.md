@@ -35,8 +35,10 @@ docker build -f terraform.dockerfile -t tetofonta/terraform:latest config
  - Install helm and kubectl on the computer
  - install k3s using `config/k3s/install.yaml` config file: `curl -sfL https://get.k3s.io | sh -s - --config "$PWD/config/k3s/install.yaml"`
  - Clone `kubeconfig.yaml` to your local machine and set remote server. (Located in `$PWD/config/k3s/kubeconfig.yaml`)
-
 ```
+
+
+
 export KUBECONFIG=$PWD/config/k3s/kubeconfig.yaml
 alias kubectl="kubectl --kubeconfig $KUBECONFIG"
 

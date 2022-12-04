@@ -24,3 +24,6 @@ variable "postgres_host"{
 variable "blueprints_dir" {
   type = string
 }
+variable "user"{
+  type = string
+}

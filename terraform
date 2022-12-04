@@ -14,7 +14,7 @@ shift
 
 
 docker run -it --rm \
-    --user "$(id -g):$(getent group docker | cut -d: -f3)" \
+    --user "$(id -u):$(getent group docker | cut -d: -f3)" \
     --network "${NET_NAME}" \
     --mount type=bind,source="$(pwd)"/data,target="$(pwd)"/data \
     --mount type=bind,source="$(pwd)"/config,target="$(pwd)"/config \

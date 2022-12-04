@@ -10,6 +10,7 @@ module authentik_deploy{
     network_name = var.network_name
     conf_dir = var.conf_dir
     data_dir = var.data_dir
+    user = var.user
     depends_on = [
       module.postgres_deploy
     ]

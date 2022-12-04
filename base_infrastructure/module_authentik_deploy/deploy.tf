@@ -50,6 +50,8 @@ resource docker_container authentik {
   ]
 
   restart   = "unless-stopped"
+  user = var.user
+
 
   volumes{
     container_path  = "/media"
@@ -129,6 +131,8 @@ resource docker_container authentik_worker {
   ]
 
   restart   = "unless-stopped"
+  user = var.user
+
 
   volumes{
     container_path  = "/media"
