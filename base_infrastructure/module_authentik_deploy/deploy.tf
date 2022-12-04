@@ -64,9 +64,15 @@ resource docker_container authentik {
   }
 
   volumes{
-    container_path  = "/authentik/.postgresql"
+    container_path  = "/user/.postgresql"
     host_path       = "${var.conf_dir}/authentik/pg"
   }
+
+  volumes{
+    container_path  = "/etc/passwd"
+    host_path       = local_file.authentik_passwd.filename
+  }
+
 
   volumes{
     container_path  = "/blueprints/default"
@@ -145,8 +151,13 @@ resource docker_container authentik_worker {
   }
 
   volumes{
-    container_path  = "/authentik/.postgresql"
+    container_path  = "/user/.postgresql"
     host_path       = "${var.conf_dir}/authentik/pg"
+  }
+
+  volumes{
+    container_path  = "/etc/passwd"
+    host_path       = local_file.authentik_passwd.filename
   }
 
   volumes{
@@ -163,6 +174,8 @@ resource docker_container authentik_worker {
     container_path  = "/blueprints/system"
     host_path       = "${abspath(var.blueprints_dir)}/system"
   }
+
+
 
   volumes{
     container_path  = "/var/run/docker.sock"

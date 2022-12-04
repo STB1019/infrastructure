@@ -5,6 +5,14 @@ module authentik_pg_user{
   client_backend = var.client_backend
 }
 
+resource local_file authentik_passwd {
+  content         = templatefile("${path.module}/passwd.tpl", {
+    user = var.user
+  })
+  filename        = "${var.conf_dir}/authentik/passwd"
+  file_permission = 0640
+}
+
 resource local_sensitive_file authentik_postgres_key {
   content         = module.authentik_pg_user.access.key
   filename        = "${var.conf_dir}/authentik/pg/postgresql.key"
