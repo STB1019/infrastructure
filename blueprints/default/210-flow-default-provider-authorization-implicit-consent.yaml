@@ -1,6 +1,6 @@
 version: 1
 metadata:
-  name: Provider authorization flow (implicit consent)
+  name: flow_authorization_implicit
 entries:
 - attrs:
     designation: authorization

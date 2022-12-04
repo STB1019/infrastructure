@@ -1,5 +1,5 @@
 resource docker_container redis {
-  name      = "authentik_redis"
+  name      = "authentik-redis"
   image     = docker_image.redis.image_id
 
   restart   = "unless-stopped"

@@ -1,5 +1,5 @@
 data docker_registry_image authentik {
-  name = "ghcr.io/goauthentik/server:2022.11.1"
+  name = "ghcr.io/goauthentik/server:2022.11.3"
 }
 
 resource docker_image authentik {

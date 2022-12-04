@@ -19,7 +19,7 @@ docker build -f terraform.dockerfile -t tetofonta/terraform:latest config
     -var-file=/base_infrastructure/vars.tfvars \
     -auto-approve
 ```
-
+ - open firewall 4443/tcp 8200/tcp? 53/udp
  - set dns to local#53
  - Finalize authentik configuration
     - get akadmin password with the command `cat base_infrastructure/terraform.tfstate | jq -r '.resources[] | select( .name == "akadmin_password" ) | .instances[0].attributes.result'`

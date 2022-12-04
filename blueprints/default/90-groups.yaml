@@ -1,0 +1,40 @@
+version: 1
+metadata:
+  name: groups
+  label:
+    author: Stefano Fontana
+    date: dec 2022
+entries:
+  - id: group-member
+    model: authentik_core.group
+    identifiers:
+      name: member
+  
+  - id: group-executive
+    model: authentik_core.group
+    identifiers:
+      name: executive
+    attrs:
+      is_superuser: true
+      parent: !KeyOf group-member
+
+  - id: group-membership
+    model: authentik_core.group
+    identifiers:
+      name: membership
+    attrs:
+      parent: !KeyOf group-member
+  
+  - id: group-financial
+    model: authentik_core.group
+    identifiers:
+      name: financial
+    attrs:
+      parent: !KeyOf group-member
+
+  - id: group-publicity
+    model: authentik_core.group
+    identifiers:
+      name: publicity
+    attrs:
+      parent: !KeyOf group-member

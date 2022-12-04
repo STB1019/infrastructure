@@ -49,6 +49,7 @@ resource vault_pki_secret_backend_cert authentik_kube_crt {
 
   common_name = "kube.${var.domain}"
   ip_sans = ["127.0.0.1", var.machine_ip]
+  auto_renew = true
 }
 
 resource authentik_certificate_key_pair kube {
