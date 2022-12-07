@@ -21,8 +21,10 @@ module "authentik_provision"{
   http_backend = module.http_ca.backend
   client_backend = module.http_ca.server_role
   domain = "${var.subdomain}${var.domain}"
+  vault_container_name = module.vault_deploy.container_name
 
   depends_on = [
-    module.authentik_deploy
+    module.authentik_deploy,
+    module.vault_deploy
   ]
 }

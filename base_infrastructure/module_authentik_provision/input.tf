@@ -7,3 +7,6 @@ variable "client_backend" {
 variable "domain" {
   type = string
 }
+variable "vault_container_name" {
+  type = string
+}
