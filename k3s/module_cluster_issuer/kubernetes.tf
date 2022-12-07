@@ -5,7 +5,7 @@ resource "kubernetes_secret" "token" {
   }
 
   data = {
-    token = base64encode(vault_token.token.client_token)
+    token = vault_token.token.client_token
   }
 
   type = "Opaque"

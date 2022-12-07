@@ -35,6 +35,10 @@ module http_issuer{
   namespace = helm_release.cert_manager.namespace
   vault_connection = "https://${var.vault_connection_host}:${var.vault_connection_port}"
   http_ca_cert = vault_pki_secret_backend_cert.ca_cert.ca_chain
+
+  depends_on = [
+    time_sleep.wait_for_cert_manager
+  ]
 }
 
 module sql_issuer{
@@ -46,4 +50,8 @@ module sql_issuer{
   namespace = helm_release.cert_manager.namespace
   vault_connection = "https://${var.vault_connection_host}:${var.vault_connection_port}"
   http_ca_cert = vault_pki_secret_backend_cert.ca_cert.ca_chain
+
+  depends_on = [
+    time_sleep.wait_for_cert_manager
+  ]
 }
