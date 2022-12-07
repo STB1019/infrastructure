@@ -54,6 +54,10 @@ variable machine_ip{
     type    = string
 }
 
+variable dns_port{
+    type    = number
+}
+
 variable "vault_host"{
     description = "The hostname of the vault server"
     type        = string

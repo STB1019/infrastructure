@@ -69,7 +69,7 @@ traeffik_dashboard_dns = "httpdashboard"
 user = "1000:1000"
 user_id = "1000"
 machine_ip = "192.168.1.174"
-
+dns_port = 53
 vault_key_shares = 1
 vault_key_threshold = 1
 

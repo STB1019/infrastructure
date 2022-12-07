@@ -10,4 +10,5 @@ module bind_deploy{
     user_id = var.user_id
     app_subdomain = var.app_subdomain
     subdomain = var.subdomain
+    dns_port = var.dns_port
 }

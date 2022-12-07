@@ -24,6 +24,10 @@ variable "machine_ip"{
   type = string
 }
 
+variable "dns_port"{
+  type = number
+}
+
 variable "forwarders" {
   type = string
 }
