@@ -8,12 +8,3 @@ module vault_deploy{
   vault_key_shares = var.vault_key_shares
   vault_key_threshold = var.vault_key_threshold
 }
-
-resource "dns_cname_record" "vault_dns" {
-  zone  = "${var.subdomain}${var.domain}."
-  name  = var.vault_host
-  cname = "${var.domain}."
-  depends_on = [
-    module.bind_deploy
-  ]
-}

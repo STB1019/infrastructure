@@ -26,7 +26,8 @@ additionalArguments:
   - '--accesslog=true'
   - '--accesslog.fields.defaultmode=keep'
   - '--accesslog.fields.headers.defaultmode=drop'
-  - '--accesslog.filters.retryattempts'
+  - '--accesslog.fields.headers.names.X-Forwarded-For=keep'
+  - '--accesslog.filters.minduration=5ms'
   - '--serversTransport.insecureSkipVerify=true'
 
 ports:

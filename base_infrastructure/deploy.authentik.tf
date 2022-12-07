@@ -26,9 +26,3 @@ module "authentik_provision"{
     module.authentik_deploy
   ]
 }
-
-resource "dns_cname_record" "authentik_dns" {
-  zone  = "${var.subdomain}${var.domain}."
-  name  = var.authentik_host
-  cname = "${var.domain}."
-}
